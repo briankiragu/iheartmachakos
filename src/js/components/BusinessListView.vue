@@ -113,9 +113,7 @@
 <script>
 import useFormatting from '../composables/useFormatting';
 
-const BusinessListModal = Vue.defineAsyncComponent(() =>
-  import('./BusinessListModal.vue')
-);
+const BusinessListModal = window.loadSFC('components/BusinessListModal.vue');
 
 export default {
   name: 'BusinessListView',

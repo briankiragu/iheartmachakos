@@ -56,9 +56,7 @@
 </template>
 
 <script>
-const BusinessListView = Vue.defineAsyncComponent(() =>
-  import('./BusinessListView.vue')
-);
+const BusinessListView = window.loadSFC('components/BusinessListView.vue');
 
 export default {
   name: 'BusinessListCard',

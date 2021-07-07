@@ -1,4 +1,4 @@
-export default () => {
+export default function useFormatting() {
   // Convert a word/phrase to 'Title Case'.
   const toTitle = (value) => value
     .split('-')

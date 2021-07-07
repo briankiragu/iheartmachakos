@@ -1,5 +1,12 @@
+// Vue SFC Loader.
 const { loadModule } = window['vue3-sfc-loader'];
 
+/**
+ * Vue SFC Loader Options.
+ * These are the options used by the sfc-loader to load the components.
+ *
+ * @author Brian K. Kiragu <bkariuki@hotmail.com>
+ */
 const options = {
   moduleCache: { vue: Vue },
 
@@ -14,9 +21,26 @@ const options = {
   }
 }
 
+/**
+ * Function to load a SFC.
+ * NB: All components MUST use CSS at the time of writing this.
+ *
+ * @param {string} string
+ * @returns {AsyncGeneratorFunction}
+ * @author Brian K. Kiragu <bkariuki@hotmail.com>
+ */
+window.loadSFC = (string) => Vue.defineAsyncComponent(() =>
+  loadModule(`./src/js/${string}`, options)
+)
+
+// Load Components.
+const HelloWorld = window.loadSFC('components/HelloWorld.vue');
+const BusinessList = window.loadSFC('components/BusinessList.vue');
+
 const app = Vue.createApp({
   components: {
-    'hello-world': Vue.defineAsyncComponent(() => loadModule('./src/js/components/HelloWorld.vue', options))
+    HelloWorld,
+    BusinessList,
   },
 });
 

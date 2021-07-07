@@ -1,11 +1,10 @@
-/* eslint-disable no-undef */
-
+// API Base URI.
 const baseUrl = 'https://heartofkenya.com';
 
-export default () => {
-  const searchTerm = Vue.Vue.ref('');
-  const filterTerm = Vue.Vue.ref('');
-  const categories = Vue.Vue.ref([
+export default function useBackend() {
+  const searchTerm = Vue.ref('');
+  const filterTerm = Vue.ref('');
+  const categories = Vue.ref([
     {
       "param": "beauty",
       "title": "Beauty and Health",
