@@ -20,24 +20,24 @@
 </template>
 
 <script>
-/* eslint-disable import/no-unresolved */
-/* eslint-disable import/no-unresolved */
-
-import useFormatting from "../composables/useFormatting";
-
 export default {
-  name: "BusinessListDropdown",
+  name: 'BusinessListDropdown',
   props: {
-    filterTerm: { type: String, default: "" },
+    filterTerm: { type: String, default: '' },
   },
-  emits: ["update:filterTerm"],
+  emits: ['update:filterTerm'],
 
   setup(props, { emit }) {
-    const categories = Vue.inject("categories");
-    const { toTitle } = useFormatting();
+    const categories = Vue.inject('categories');
+
+    const toTitle = (value) =>
+      value
+        .split('-')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 
     const onFilter = (e) => {
-      emit("update:filterTerm", e.target.value);
+      emit('update:filterTerm', e.target.value);
     };
 
     return { categories, toTitle, onFilter };

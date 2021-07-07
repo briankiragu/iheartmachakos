@@ -16,7 +16,7 @@
     <div class="row g-2">
       <!-- Dropdown Filter. -->
       <div class="col-md-3">
-        <!-- <BusinessListDropdown v-model:filter-term.lazy="filterTerm" /> -->
+        <BusinessListDropdown v-model:filter-term.lazy="filterTerm" />
       </div>
 
       <!-- Searchbar. -->
