@@ -29,13 +29,17 @@ const options = {
  * @returns {AsyncGeneratorFunction}
  * @author Brian K. Kiragu <bkariuki@hotmail.com>
  */
-window.loadSFC = (string) => Vue.defineAsyncComponent(() =>
-  loadModule(`./src/js/${string}`, options)
-)
+const loadSFC = (string) => Vue.defineAsyncComponent(() => {
+  console.log(`./src/js/${string}`)
+  return loadModule(`./src/js/${string}`, options)
+});
+
+// Assign the custom SFC loader to the window.
+window.loadSFC = loadSFC;
 
 // Load Components.
-const HelloWorld = window.loadSFC('components/HelloWorld.vue');
-const BusinessList = window.loadSFC('components/BusinessList.vue');
+const HelloWorld = loadSFC('components/HelloWorld.vue');
+const BusinessList = loadSFC('components/BusinessList.vue');
 
 // Create the Vue instance.
 const app = Vue.createApp({

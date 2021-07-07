@@ -124,7 +124,6 @@ export default {
       },
     ]);
 
-    const hasCategories = Vue.computed(() => categories.value.length > 0);
     const hasBusinesses = Vue.computed(() => businesses.value.length > 0);
 
     /**
@@ -145,33 +144,6 @@ export default {
 
       // Launch the request.
       const response = await fetch(endpoint);
-
-      // Check for errors.
-      if (!response.ok) {
-        throw new Error(`There was an error ${response.statusText}`);
-      }
-
-      // Get the data from the request.
-      return response.json();
-    };
-
-    /**
-     * Update a business
-     *
-     * @param data {IBusinessForm} User input data
-     * @returns {void}
-     *
-     * @author Brian K. Kiragu <bkariuki@hotmail.com>
-     */
-    const updateBusiness = async (data) => {
-      // Launch the request.
-      const response = await fetch(baseUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
 
       // Check for errors.
       if (!response.ok) {
