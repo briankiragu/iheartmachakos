@@ -1,3 +1,6 @@
+/* eslint-disable no-shadow */
+/* eslint-disable no-console */
+
 // Vue SFC Loader.
 const { loadModule } = window['vue3-sfc-loader'];
 
@@ -18,6 +21,34 @@ const options = {
     style.textContent = styleStr;
     const ref = document.head.getElementsByTagName('style')[0] || null;
     document.head.insertBefore(style, ref);
+  },
+
+  log: (type, ...args) => {
+    console.log(type, ...args);
+  },
+
+  compiledCache: {
+    set: (key, str) => {
+      // naive storage space management
+      for (; ;) {
+        try {
+          // doc: https://developer.mozilla.org/en-US/docs/Web/API/Storage
+          window.localStorage.setItem(key, str);
+          break;
+        } catch (ex) {
+          // handle: Uncaught DOMException:
+          // Failed to execute 'setItem' on 'Storage':
+          // Setting the value of 'XXX' exceeded the quota
+          window.localStorage.removeItem(window.localStorage.key(0));
+        }
+      }
+    },
+
+    get: (key) => window.localStorage.getItem(key),
+  },
+
+  additionalModuleHandlers: {
+    '.json': (source, _path, _options) => JSON.parse(source),
   }
 }
 
