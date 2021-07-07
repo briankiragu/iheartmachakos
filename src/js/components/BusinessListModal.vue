@@ -60,20 +60,12 @@
                     v-model="businessForm.title"
                     type="text"
                     class="form-control"
-                    :class="{ 'is-invalid': v$.title.$invalid }"
                     placeholder="Name of business"
                     autocomplete="organization"
                   />
                   <label :for="`business-title-${business.directoryIdx}`">
                     Name of Business
                   </label>
-
-                  <!-- Validation feedback. -->
-                  <div v-if="v$.title.$invalid" class="invalid-feedback">
-                    <p v-for="error of v$.title.$errors" :key="error.$uid">
-                      <strong>{{ error.$message }}</strong>
-                    </p>
-                  </div>
                 </div>
               </div>
 
@@ -85,16 +77,12 @@
                     v-model="businessForm.city"
                     type="text"
                     class="form-control"
-                    :class="{ 'is-invalid': v$.city.$invalid }"
                     placeholder="Where is this business located?"
                     autocomplete="address-level1"
                   />
                   <label :for="`business-location-${business.directoryIdx}`">
                     Where is this business?
                   </label>
-                  <div v-if="v$.city.$invalid" class="invalid-feedback">
-                    Please give a city.
-                  </div>
                 </div>
               </div>
             </div>
@@ -107,7 +95,6 @@
                     :id="`business-category-${business.directoryIdx}`"
                     v-model="businessForm.category"
                     class="form-select"
-                    :class="{ 'is-invalid': v$.category.$invalid }"
                     aria-label="Floating label select example"
                     required
                   >
@@ -124,9 +111,6 @@
                   <label :for="`business-category-${business.directoryIdx}`">
                     Works with selects
                   </label>
-                  <div v-if="v$.category.$invalid" class="invalid-feedback">
-                    Please select a category.
-                  </div>
                 </div>
               </div>
 
@@ -138,7 +122,6 @@
                     v-model="businessForm.category"
                     type="text"
                     class="form-control"
-                    :class="{ 'is-invalid': v$.category.$invalid }"
                     placeholder="Enter name of category"
                     autocomplete="address-level1"
                     required
@@ -148,9 +131,6 @@
                   >
                     If other, which category?
                   </label>
-                  <div v-if="v$.category.$invalid" class="invalid-feedback">
-                    Please give a category.
-                  </div>
                 </div>
               </div>
             </div>
@@ -164,16 +144,12 @@
                     v-model.number="businessForm.phone"
                     type="number"
                     class="form-control"
-                    :class="{ 'is-invalid': v$.phone.$invalid }"
                     placeholder="Business Phone Number"
                     autocomplete="tel"
                   />
                   <label :for="`business-phone-${business.directoryIdx}`">
                     Phone Number
                   </label>
-                  <div v-if="v$.phone.$invalid" class="invalid-feedback">
-                    Please give a valid phone number.
-                  </div>
                 </div>
               </div>
 
@@ -185,16 +161,12 @@
                     v-model="businessForm.email"
                     type="email"
                     class="form-control"
-                    :class="{ 'is-invalid': v$.email.$invalid }"
                     placeholder="Business Email"
                     autocomplete="email"
                   />
                   <label :for="`business-email-${business.directoryIdx}`">
                     Business Email
                   </label>
-                  <div v-if="v$.email.$invalid" class="invalid-feedback">
-                    Please give a valid email address.
-                  </div>
                 </div>
               </div>
             </div>
@@ -206,16 +178,12 @@
                 v-model="businessForm.website"
                 type="url"
                 class="form-control"
-                :class="{ 'is-invalid': v$.website.$invalid }"
                 placeholder="business website"
                 autocomplete="url"
               />
               <label :for="`business-website-${business.directoryIdx}`">
                 Business Website
               </label>
-              <div v-if="v$.website.$invalid" class="invalid-feedback">
-                Please give a valid website.
-              </div>
             </div>
 
             <!-- Notes.-->
@@ -224,16 +192,12 @@
                 :id="`business-note-${business.directoryIdx}`"
                 v-model="businessForm.notes"
                 class="form-control"
-                :class="{ 'is-invalid': v$.notes.$invalid }"
                 placeholder="Leave a note here"
                 style="height: 100px"
               ></textarea>
               <label :for="`business-note-${business.directoryIdx}`">
                 Notes
               </label>
-              <div v-if="v$.notes.$invalid" class="invalid-feedback">
-                Please give a notes.
-              </div>
             </div>
           </div>
 
@@ -246,11 +210,7 @@
             >
               Close
             </button>
-            <button
-              type="submit"
-              class="btn btn-primary"
-              :class="{ disabled: v$.$invalid }"
-            >
+            <button type="submit" class="btn btn-primary">
               Update this business
             </button>
           </div>
@@ -262,24 +222,55 @@
 
 <script>
 /* eslint-disable no-console */
-import useVuelidate from '@vuelidate/core';
-import { required, email, url } from '@vuelidate/validators';
-import useBackend from '../composables/useBackend';
-import useFormatting from '../composables/useFormatting';
-
 export default {
   name: 'BusinessListModal',
 
   setup() {
+    // API Base URI.
+    const baseUrl = 'https://heartofkenya.com';
+
     // Retrive the business and categories from the parent component.
     const business = Vue.inject('business');
     const categories = Vue.inject('categories');
 
-    // Get the update business method.
-    const { updateBusiness } = useBackend();
+    /**
+     * Update a business
+     *
+     * @param data {IBusinessForm} User input data
+     * @author Brian K. Kiragu <bkariuki@hotmail.com>
+     */
+    const updateBusiness = async (data) => {
+      // Launch the request.
+      const response = await fetch(baseUrl, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
 
-    // Formatting methods.
-    const { toTitle } = useFormatting();
+      // Check for errors.
+      if (!response.ok) {
+        throw new Error(`There was an error ${response.statusText}`);
+      }
+
+      // Get the data from the request.
+      return response.json();
+    };
+
+    /**
+     * Convert a word/phrase to 'Title Case'.
+     *
+     * @param {string} value
+     * @returns {string}
+     *
+     * @author Brian Kariuki Kiragu <bkariuki@hotmail.com>
+     */
+    const toTitle = (value) =>
+      value
+        .split('-')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 
     // Populate the form values.
     const businessForm = Vue.reactive({
@@ -292,31 +283,8 @@ export default {
       notes: '',
     });
 
-    // Validation rules.
-    const rules = {
-      title: { required },
-      category: {},
-      city: {},
-      phone: {},
-      email: { email },
-      website: { url },
-      notes: {},
-    };
-
-    // Setup vuelidate.
-    const v$ = useVuelidate(rules, businessForm, {
-      $autoDirty: true,
-      $lazy: true,
-    });
-
     // If category not in available categories.
-    const isInCategories = Vue.computed(() => {
-      console.log(categories.val);
-      if (typeof categories !== 'undefined') {
-        const params = categories.map((category) => category.param);
-      }
-      return false;
-    });
+    const isInCategories = Vue.computed(() => false);
 
     /**
      * When a user clicks submit.
@@ -330,7 +298,6 @@ export default {
     };
 
     return {
-      v$,
       business,
       categories,
       businessForm,
@@ -342,12 +309,10 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.business-list-card-modal {
-  &__trigger {
-    background-color: #e0e7ff;
-    font-weight: 700;
-    padding: 12px 15px;
-  }
+<style scoped>
+.business-list-card-modal__trigger {
+  background-color: #e0e7ff;
+  font-weight: 700;
+  padding: 12px 15px;
 }
 </style>

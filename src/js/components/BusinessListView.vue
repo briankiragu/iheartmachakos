@@ -111,8 +111,6 @@
 </template>
 
 <script>
-import useFormatting from '../composables/useFormatting';
-
 const BusinessListModal = window.loadSFC('components/BusinessListModal.vue');
 
 export default {
@@ -127,34 +125,44 @@ export default {
     const isLocallyOwned = Vue.computed(() => business.localowned === 'true');
     const hasWebsite = Vue.computed(() => !!business.website);
 
-    const { toTitle } = useFormatting();
+    /**
+     * Convert a word/phrase to 'Title Case'.
+     *
+     * @param {string} value
+     * @returns {string}
+     *
+     * @author Brian Kariuki Kiragu <bkariuki@hotmail.com>
+     */
+    const toTitle = (value) =>
+      value
+        .split('-')
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
 
     return { business, isLocallyOwned, hasWebsite, toTitle };
   },
 };
 </script>
 
-<style lang="scss" scoped>
-.business-list-view {
-  &__title {
-    font-size: 1.6rem;
-    font-weight: 400;
-  }
+<style scoped>
+.business-list-view__title {
+  font-size: 1.6rem;
+  font-weight: 400;
+}
 
-  &__subtitle {
-    font-size: 0.9rem;
-  }
+.business-list-view__subtitle {
+  font-size: 0.9rem;
+}
 
-  &__info {
-    font-size: 0.9rem;
-  }
+.business-list-view__info {
+  font-size: 0.9rem;
+}
 
-  &__category {
-    background-color: #6366f1;
-  }
+.business-list-view__category {
+  background-color: #6366f1;
+}
 
-  &__website {
-    font-size: 0.9rem;
-  }
+.business-list-view__website {
+  font-size: 0.9rem;
 }
 </style>

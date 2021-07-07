@@ -27,11 +27,11 @@
 
     <!-- List of businesses. -->
     <div v-if="hasBusinesses" class="business-list__card">
-      <!-- <BusinessListCard
+      <BusinessListCard
         v-for="business in businesses"
         :key="business.directoryIdx"
         :business="business"
-      /> -->
+      />
 
       <div
         class="business-list__loader d-flex justify-content-center"
@@ -55,7 +55,6 @@
 
 <script>
 /* eslint-disable no-console */
-
 const BusinessListAdd = window.loadSFC('components/BusinessListAdd.vue');
 const BusinessListCard = window.loadSFC('components/BusinessListCard.vue');
 const BusinessListDropdown = window.loadSFC(

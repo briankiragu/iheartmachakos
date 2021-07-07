@@ -5,10 +5,14 @@
     "strict": true,
     "allowJs": true,
     "jsx": "preserve",
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "outDir": "./public"
   },
   "include": [
     "src/**/*.js",
     "src/**/*.vue"
+  ],
+  "exclude": [
+    "node_modules/**/*"
   ]
 }
