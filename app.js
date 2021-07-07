@@ -37,6 +37,7 @@ window.loadSFC = (string) => Vue.defineAsyncComponent(() =>
 const HelloWorld = window.loadSFC('components/HelloWorld.vue');
 const BusinessList = window.loadSFC('components/BusinessList.vue');
 
+// Create the Vue instance.
 const app = Vue.createApp({
   components: {
     HelloWorld,
@@ -44,4 +45,5 @@ const app = Vue.createApp({
   },
 });
 
+// Mount the application.
 app.mount('#app');
