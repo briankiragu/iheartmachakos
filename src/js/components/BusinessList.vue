@@ -21,7 +21,7 @@
 
       <!-- Searchbar. -->
       <div class="col">
-        <!-- <BusinessListSearchbar v-model:search-term.lazy="searchTerm" /> -->
+        <BusinessListSearchbar v-model:search-term.lazy="searchTerm" />
       </div>
     </div>
 

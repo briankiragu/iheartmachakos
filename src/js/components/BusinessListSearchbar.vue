@@ -31,14 +31,12 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-.business-list-searchbar {
-  input {
-    font-size: 0.9rem;
-  }
+<style scoped>
+.business-list-searchbar input {
+  font-size: 0.9rem;
+}
 
-  label {
-    font-size: 1rem;
-  }
+.business-list-searchbar label {
+  font-size: 1rem;
 }
 </style>
