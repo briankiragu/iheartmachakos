@@ -9,6 +9,7 @@ module.exports = {
     './src/main.ts'
   ],
   output: {
+    filename: 'build.js',
     path: path.resolve(__dirname, './dist'),
     publicPath: '/dist/'
   },

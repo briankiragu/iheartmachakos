@@ -8,4 +8,4 @@ const app = createApp({
 });
 
 // Mount the application.
-app.mount('#app');
+app.mount('#app-3');
