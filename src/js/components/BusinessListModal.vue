@@ -223,7 +223,7 @@
 <script lang="ts">
 /* eslint-disable import/extensions */
 import { computed, defineComponent, inject, Ref, ref } from 'vue';
-import { IBusiness, IBusinessForm } from '../../interfaces';
+import { IBusiness, IBusinessForm, ICategory } from '../../interfaces';
 import useBackend from '../composables/useBackend';
 import useFormatting from '../composables/useFormatting';
 
@@ -233,9 +233,10 @@ export default defineComponent({
 
   setup() {
     const business: undefined | IBusiness = inject('business');
+    const categories: undefined | ICategory[] = inject('categories');
 
     // Backend properties.
-    const { categories, updateBusiness } = useBackend();
+    const { updateBusiness } = useBackend();
 
     // Formatting methods.
     const { toTitle } = useFormatting();
@@ -252,7 +253,16 @@ export default defineComponent({
     });
 
     // If category not in available categories.
-    const isInCategories = computed(() => false);
+    const isInCategories = computed(() => {
+      if (categories) {
+        return (
+          categories?.find(
+            (category) => category.param === businessForm.value.category
+          ) !== null
+        );
+      }
+      return false;
+    });
 
     /**
      * When a user clicks submit.
