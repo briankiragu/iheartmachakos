@@ -34,6 +34,7 @@
       />
 
       <div
+        v-if="isLoading"
         class="business-list__loader d-flex justify-content-center"
         :class="{ 'd-none': !isLoading }"
       >
@@ -53,18 +54,35 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 /* eslint-disable no-console */
-const BusinessListAdd = window.loadSFC('components/BusinessListAdd.vue');
-const BusinessListCard = window.loadSFC('components/BusinessListCard.vue');
-const BusinessListDropdown = window.loadSFC(
-  'components/BusinessListDropdown.vue'
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
+import {
+  defineAsyncComponent,
+  defineComponent,
+  onMounted,
+  provide,
+  Ref,
+  ref,
+} from 'vue';
+import useBackend from '../composables/useBackend';
+
+// Import components.
+const BusinessListAdd = defineAsyncComponent(
+  () => import('./BusinessListAdd.vue')
 );
-const BusinessListSearchbar = window.loadSFC(
-  'components/BusinessListSearchbar.vue'
+const BusinessListCard = defineAsyncComponent(
+  () => import('./BusinessListCard.vue')
+);
+const BusinessListDropdown = defineAsyncComponent(
+  () => import('./BusinessListDropdown.vue')
+);
+const BusinessListSearchbar = defineAsyncComponent(
+  () => import('./BusinessListSearchbar.vue')
 );
 
-export default {
+export default defineComponent({
   name: 'BusinessList',
   components: {
     BusinessListAdd,
@@ -74,116 +92,23 @@ export default {
   },
 
   setup() {
-    // API Base URI.
-    const baseUrl = 'https://heartofkenya.com';
-
     // Declare data properties.
-    const isLoading = Vue.ref(true);
-    const pageNo = Vue.ref(1);
+    const isLoading: Ref<boolean> = ref(true);
+    const pageNo: Ref<number> = ref(1);
 
-    const searchTerm = Vue.ref('');
-    const filterTerm = Vue.ref('');
-    const categories = Vue.ref([
-      {
-        param: 'beauty',
-        title: 'Beauty and Health',
-        status: 'Active',
-      },
-      {
-        param: 'bookstores',
-        title: 'Book Stores',
-        status: 'Active',
-      },
-    ]);
-    const businesses = Vue.ref([
-      {
-        directoryIdx: 4,
-        worldid: 'kenyaheart',
-        library: 'Machakos',
-        category: 'Beauty',
-        title: 'Ruth Beauty Parlour',
-        owner: 'Bernard',
-        website: '',
-        city: 'Machakos',
-        localowned: null,
-        status: 'Active',
-        modified: '4/16/2021 11:55:35 PM',
-      },
-      {
-        directoryIdx: 1,
-        worldid: 'kenyaheart',
-        library: 'machakos',
-        category: 'bookstores',
-        title: 'Chap Chap Enterprise',
-        owner: 'Richard Wasike',
-        website: null,
-        city: 'Machakos',
-        localowned: 'true',
-        status: 'Active',
-        modified: '',
-      },
-    ]);
-
-    const hasBusinesses = Vue.computed(() => businesses.value.length > 0);
-
-    /**
-     * Function to query endpoint.
-     *
-     * @param page {number} The page number.
-     * @param term {null | string} The search term
-     * @returns Promise<IBusiness[]>
-     *
-     * @author Brian K. Kiragu <bkariuki@hotmail.com>
-     */
-    const getBusinesses = async (page = 1, term = null) => {
-      // Set the request endpoint.
-      let endpoint = `${baseUrl}/TableSearchJson?config=directoryMachakosJson&page=${page}`;
-
-      // Check if a search term was provided.
-      endpoint = term ? `${endpoint}&search=${term}` : endpoint;
-
-      // Launch the request.
-      const response = await fetch(endpoint);
-
-      // Check for errors.
-      if (!response.ok) {
-        throw new Error(`There was an error ${response.statusText}`);
-      }
-
-      // Get the data from the request.
-      return response.json();
-    };
-
-    /**
-     * Function to query categories.
-     *
-     * @param page {number} The page number.
-     * @param term {null | string} The search term
-     * @returns Promise</ICategory[]>
-     *
-     * @author Brian K. Kiragu <bkariuki@hotmail.com>
-     */
-    const getCategories = async (page = 1, term = null) => {
-      // Set the request endpoint.
-      let endpoint = `${baseUrl}/TableSearchJson?config=businessCategories&page=${page}`;
-
-      // Check if a search term was provided.
-      endpoint = term ? `${endpoint}&search=${term}` : endpoint;
-
-      // Launch the request.
-      const response = await fetch(endpoint);
-
-      // Check for errors.
-      if (!response.ok) {
-        throw new Error(`There was an error ${response.statusText}`);
-      }
-
-      // Get the data from the request.
-      return response.json();
-    };
+    // Get backend properties.
+    const {
+      searchTerm,
+      filterTerm,
+      businesses,
+      categories,
+      hasBusinesses,
+      getBusinesses,
+      getCategories,
+    } = useBackend();
 
     // Fetch the data when the component is mounted.
-    Vue.onMounted(() => {
+    onMounted(() => {
       // Set to loading.
       isLoading.value = true;
 
@@ -206,7 +131,7 @@ export default {
         .catch((err) => console.error(err.message));
 
       // Add a listener to fetch more records on scroll-to-bottom.
-      window.onscroll = async () => {
+      window.onscroll = () => {
         if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
           // Set the state to loading.
           isLoading.value = true;
@@ -241,7 +166,7 @@ export default {
     });
 
     // Provide the categories and updateBusiness to the children.
-    Vue.provide('categories', categories);
+    provide('categories', categories);
 
     return {
       isLoading,
@@ -252,11 +177,11 @@ export default {
       hasBusinesses,
     };
   },
-};
+});
 </script>
 
-<style scoped>
-.business-list__loader img {
-  width: 80px;
+<style lang="scss" scoped>
+.business-list {
+  color: hsl(217, 19%, 27%);
 }
 </style>

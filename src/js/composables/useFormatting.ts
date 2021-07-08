@@ -7,10 +7,10 @@ export default function useFormatting() {
    *
    * @author Brian Kariuki Kiragu <bkariuki@hotmail.com>
    */
-  const toTitle = (value) => value
-    .split('-')
-    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(' ')
+  const toTitle = (value: string = ''): string =>
+    value.split('-')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ')
 
   return { toTitle }
 }

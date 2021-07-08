@@ -13,8 +13,10 @@
   </div>
 </template>
 
-<script>
-export default {
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
   name: 'BusinessListSearchbar',
   props: {
     searchTerm: { type: String, default: '' },
@@ -22,13 +24,13 @@ export default {
   emits: ['update:searchTerm'],
 
   setup(props, { emit }) {
-    const onSearch = (e) => {
+    const onSearch = (e: any) => {
       emit('update:searchTerm', e.target.value);
     };
 
     return { onSearch };
   },
-};
+});
 </script>
 
 <style scoped>

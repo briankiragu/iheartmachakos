@@ -49,10 +49,14 @@
   </div>
 </template>
 
-<script>
-const BusinessListView = window.loadSFC('components/BusinessListView.vue');
+<script lang="ts">
+import { defineAsyncComponent, defineComponent, provide } from 'vue';
 
-export default {
+const BusinessListView = defineAsyncComponent(
+  () => import('./BusinessListView.vue')
+);
+
+export default defineComponent({
   name: 'BusinessListCard',
   components: { BusinessListView },
 
@@ -62,14 +66,14 @@ export default {
 
   setup(props) {
     // Check if the business is locally owned.
-    const isLocallyOwned = props.business.localowned === 'true';
+    const isLocallyOwned: boolean = props.business.localowned === 'true';
 
     // Provide the business to all children.
-    Vue.provide('business', props.business);
+    provide('business', props.business);
 
     return { isLocallyOwned };
   },
-};
+});
 </script>
 
 <style scoped>

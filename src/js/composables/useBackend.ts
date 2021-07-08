@@ -1,10 +1,13 @@
+import { computed, Ref, ref } from "vue";
+import { IBusiness, IBusinessForm, ICategory, IPaginatedBusinessResponse, IPaginatedCategoryResponse } from "../../interfaces";
+
 // API Base URI.
-const baseUrl = 'https://heartofkenya.com';
+const baseUrl: string = 'https://heartofkenya.com';
 
 export default function useBackend() {
-  const searchTerm = Vue.ref('');
-  const filterTerm = Vue.ref('');
-  const categories = Vue.ref([
+  const searchTerm: Ref<string> = ref('');
+  const filterTerm: Ref<string> = ref('');
+  const categories: Ref<ICategory[]> = ref([
     {
       "param": "beauty",
       "title": "Beauty and Health",
@@ -16,7 +19,7 @@ export default function useBackend() {
       "status": "Active"
     }
   ]);
-  const businesses = Vue.ref([
+  const businesses: Ref<IBusiness[]> = ref([
     {
       "directoryIdx": 4,
       "worldid": "kenyaheart",
@@ -45,8 +48,8 @@ export default function useBackend() {
     }
   ]);
 
-  const hasCategories = Vue.computed(() => categories.value.length > 0)
-  const hasBusinesses = Vue.computed(() => businesses.value.length > 0)
+  const hasCategories: Ref<boolean> = computed(() => categories.value.length > 0)
+  const hasBusinesses: Ref<boolean> = computed(() => businesses.value.length > 0)
 
   /**
    * Function to query endpoint.
@@ -57,9 +60,9 @@ export default function useBackend() {
    * @author Brian K. Kiragu <bkariuki@hotmail.com>
    */
   const getBusinesses = async (
-    page = 1,
-    term = null
-  ) => {
+    page: number = 1,
+    term: null | string = null
+  ): Promise<IPaginatedBusinessResponse> => {
     // Set the request endpoint.
     let endpoint = `${baseUrl}/TableSearchJson?config=directoryMachakosJson&page=${page}`;
 
@@ -84,7 +87,7 @@ export default function useBackend() {
    * @param data {IBusinessForm} User input data
    * @author Brian K. Kiragu <bkariuki@hotmail.com>
    */
-  const updateBusiness = async (data) => {
+  const updateBusiness = async (data: IBusinessForm): Promise<void> => {
     // Launch the request.
     const response = await fetch(baseUrl, {
       method: 'POST',
@@ -112,9 +115,9 @@ export default function useBackend() {
   * @author Brian K. Kiragu <bkariuki@hotmail.com>
   */
   const getCategories = async (
-    page = 1,
-    term = null
-  ) => {
+    page: number = 1,
+    term: null | string = null
+  ): Promise<IPaginatedCategoryResponse> => {
     // Set the request endpoint.
     let endpoint = `${baseUrl}/TableSearchJson?config=businessCategories&page=${page}`;
 

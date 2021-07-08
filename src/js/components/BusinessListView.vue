@@ -5,7 +5,7 @@
       type="button"
       class="btn btn-primary btn-circle"
       data-bs-toggle="modal"
-      :data-bs-target="`#static-backdrop-${business.directoryIdx}`"
+      :data-bs-target="`#static-backdrop-${business?.directoryIdx}`"
     >
       View
     </button>
@@ -13,12 +13,12 @@
     <!-- Modal -->
     <teleport to="#business-views">
       <div
-        :id="`static-backdrop-${business.directoryIdx}`"
+        :id="`static-backdrop-${business?.directoryIdx}`"
         class="modal fade"
         data-bs-backdrop="static"
         data-bs-keyboard="false"
         tabindex="-1"
-        :aria-labelledby="`static-backdrop-${business.directoryIdx}Label`"
+        :aria-labelledby="`static-backdrop-${business?.directoryIdx}Label`"
         aria-hidden="true"
       >
         <div class="modal-dialog modal-fullscreen">
@@ -26,10 +26,10 @@
             <!-- Modal Header. -->
             <div class="modal-header">
               <h5
-                :id="`static-backdrop-${business.directoryIdx}Label`"
+                :id="`static-backdrop-${business?.directoryIdx}Label`"
                 class="modal-title"
               >
-                {{ business.title }}
+                {{ business?.title }}
               </h5>
               <button
                 type="button"
@@ -44,7 +44,7 @@
               <!-- <div class="business-list-view__image">
                 <img
                   src="../assets/images/local1.jpeg"
-                  :alt="`${business.title} image`"
+                  :alt="`${business?.title} image`"
                   class="img-fluid rounded-3"
                   loading="lazy"
                 />
@@ -61,16 +61,16 @@
                 <!-- Titles. -->
                 <div class="business-list-view__titles">
                   <h1 class="business-list-view__title mb-1">
-                    {{ business.title }}
+                    {{ business?.title }}
                   </h1>
                   <h3 class="business-list-view__subtitle">
-                    {{ business.owner }} owns this business
+                    {{ business?.owner }} owns this business
                   </h3>
                   <h4
                     v-if="hasWebsite"
                     class="business-list-view__website mt-2"
                   >
-                    <a :href="business.website" target="_blank">
+                    <a :href="business?.website" target="_blank">
                       View their website
                     </a>
                   </h4>
@@ -94,12 +94,12 @@
                     text-white
                   "
                 >
-                  {{ toTitle(business.category) }}
+                  {{ toTitle(business?.category) }}
                 </span>
 
                 <!-- Location. -->
                 <span class="business-list-view__location">
-                  Located in {{ business.city }}
+                  Located in {{ business?.city }}
                 </span>
               </div>
             </div>
@@ -110,38 +110,33 @@
   </div>
 </template>
 
-<script>
-const BusinessListModal = window.loadSFC('components/BusinessListModal.vue');
+<script lang="ts">
+/* eslint-disable import/extensions */
+import { computed, defineAsyncComponent, defineComponent, inject } from 'vue';
+import { IBusiness } from '../../interfaces';
+import useFormatting from '../composables/useFormatting';
 
-export default {
+const BusinessListModal = defineAsyncComponent(
+  () => import('./BusinessListModal.vue')
+);
+
+export default defineComponent({
   name: 'BusinessListView',
   components: { BusinessListModal },
 
   setup() {
     // Retrive the business from the parent component.
-    const business = Vue.inject('business');
+    const business: undefined | IBusiness = inject('business');
 
     // Computed properties.
-    const isLocallyOwned = Vue.computed(() => business.localowned === 'true');
-    const hasWebsite = Vue.computed(() => !!business.website);
+    const hasWebsite = computed(() => !!business!.website);
 
-    /**
-     * Convert a word/phrase to 'Title Case'.
-     *
-     * @param {string} value
-     * @returns {string}
-     *
-     * @author Brian Kariuki Kiragu <bkariuki@hotmail.com>
-     */
-    const toTitle = (value) =>
-      value
-        .split('-')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+    // Formatting methods.
+    const { toTitle } = useFormatting();
 
-    return { business, isLocallyOwned, hasWebsite, toTitle };
+    return { business, hasWebsite, toTitle };
   },
-};
+});
 </script>
 
 <style scoped>

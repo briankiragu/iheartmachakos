@@ -64,7 +64,7 @@
                     :key="`category-${category.param}`"
                     :value="category.param"
                   >
-                    {{ toTitle(category.title) }}
+                    {{ toTitle(category?.title) }}
                   </option>
                 </select>
                 <label :for="`business-category`">Works with selects</label>
@@ -164,52 +164,30 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable import/no-unresolved */
+/* eslint-disable import/extensions */
+import { defineComponent, inject, Ref, ref } from 'vue';
+import { IBusinessForm, ICategory } from '../../interfaces';
+import useBackend from '../composables/useBackend';
+import useFormatting from '../composables/useFormatting';
+
 /* eslint-disable no-console */
-export default {
+export default defineComponent({
   name: 'BusinessListAdd',
 
   setup() {
-    // API Base URI.
-    const baseUrl = 'https://heartofkenya.com';
-
     // Retrive the categories from the parent component.
-    const categories = Vue.inject('categories');
+    const categories: undefined | ICategory[] = inject('categories');
 
-    /**
-     * Update a business
-     *
-     * @param data {IBusinessForm} User input data
-     * @author Brian K. Kiragu <bkariuki@hotmail.com>
-     */
-    const updateBusiness = async (data) => {
-      // Launch the request.
-      const response = await fetch(baseUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      // Check for errors.
-      if (!response.ok) {
-        throw new Error(`There was an error ${response.statusText}`);
-      }
-
-      // Get the data from the request.
-      return response.json();
-    };
+    // Get backend properties.
+    const { updateBusiness } = useBackend();
 
     // Formatting methods.
-    const toTitle = (value) =>
-      value
-        .split('-')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+    const { toTitle } = useFormatting();
 
     // Populate the form values.
-    const businessForm = Vue.ref({
+    const businessForm: Ref<IBusinessForm> = ref({
       title: '',
       category: '',
       city: '',
@@ -219,15 +197,18 @@ export default {
       notes: '',
     });
 
-    const onSubmit = () => {
-      updateBusiness(businessForm)
+    /**
+     * When a user submits their input.
+     */
+    const onSubmit = (): void => {
+      updateBusiness(businessForm.value)
         .then((res) => console.log(res))
         .catch((err) => console.error(err));
     };
 
     return { categories, businessForm, toTitle, onSubmit };
   },
-};
+});
 </script>
 
 <style scoped>

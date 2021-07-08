@@ -4,7 +4,7 @@
     type="button"
     class="business-list-card-modal__trigger rounded-circle border-0 shadow"
     data-bs-toggle="modal"
-    :data-bs-target="`#modal${business.directoryIdx}`"
+    :data-bs-target="`#modal${business?.directoryIdx}`"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -27,19 +27,19 @@
   <!-- Modal -->
   <teleport to="#business-modals">
     <div
-      :id="`modal${business.directoryIdx}`"
+      :id="`modal${business?.directoryIdx}`"
       class="modal fade"
       data-bs-backdrop="static"
       data-bs-keyboard="false"
       tabindex="-1"
-      :aria-labelledby="`modal${business.directoryIdx}Label`"
+      :aria-labelledby="`modal${business?.directoryIdx}Label`"
       aria-hidden="true"
     >
       <div class="modal-dialog modal-lg">
         <form class="modal-content" @submit.prevent="onSubmit">
           <div class="modal-header">
-            <h5 :id="`modal${business.directoryIdx}Label`" class="modal-title">
-              Edit {{ business.title }}
+            <h5 :id="`modal${business?.directoryIdx}Label`" class="modal-title">
+              Edit {{ business?.title }}
             </h5>
             <button
               type="button"
@@ -52,35 +52,35 @@
           <!-- Edit form. -->
           <div class="modal-body">
             <div class="row g-2">
-              <!-- Name of business. -->
+              <!-- Name of business?. -->
               <div class="col-md-6">
                 <div class="form-floating mb-2">
                   <input
-                    :id="`business-title-${business.directoryIdx}`"
+                    :id="`business-title-${business?.directoryIdx}`"
                     v-model="businessForm.title"
                     type="text"
                     class="form-control"
                     placeholder="Name of business"
                     autocomplete="organization"
                   />
-                  <label :for="`business-title-${business.directoryIdx}`">
+                  <label :for="`business-title-${business?.directoryIdx}`">
                     Name of Business
                   </label>
                 </div>
               </div>
 
-              <!-- Location of business. -->
+              <!-- Location of business?. -->
               <div class="col-md-6">
                 <div class="form-floating mb-2">
                   <input
-                    :id="`business-location-${business.directoryIdx}`"
+                    :id="`business-location-${business?.directoryIdx}`"
                     v-model="businessForm.city"
                     type="text"
                     class="form-control"
                     placeholder="Where is this business located?"
                     autocomplete="address-level1"
                   />
-                  <label :for="`business-location-${business.directoryIdx}`">
+                  <label :for="`business-location-${business?.directoryIdx}`">
                     Where is this business?
                   </label>
                 </div>
@@ -88,11 +88,11 @@
             </div>
 
             <div class="row g-2">
-              <!-- Category of business. -->
+              <!-- Category of business?. -->
               <div v-if="categories" class="col mb-2">
                 <div class="form-floating">
                   <select
-                    :id="`business-category-${business.directoryIdx}`"
+                    :id="`business-category-${business?.directoryIdx}`"
                     v-model="businessForm.category"
                     class="form-select"
                     aria-label="Floating label select example"
@@ -108,7 +108,7 @@
                     </option>
                     <option value="other">Other</option>
                   </select>
-                  <label :for="`business-category-${business.directoryIdx}`">
+                  <label :for="`business-category-${business?.directoryIdx}`">
                     Works with selects
                   </label>
                 </div>
@@ -118,7 +118,7 @@
               <div v-if="!isInCategories" class="col-md-6">
                 <div class="form-floating mb-2">
                   <input
-                    :id="`business-other-category-${business.directoryIdx}`"
+                    :id="`business-other-category-${business?.directoryIdx}`"
                     v-model="businessForm.category"
                     type="text"
                     class="form-control"
@@ -127,7 +127,7 @@
                     required
                   />
                   <label
-                    :for="`business-other-category-${business.directoryIdx}`"
+                    :for="`business-other-category-${business?.directoryIdx}`"
                   >
                     If other, which category?
                   </label>
@@ -136,35 +136,35 @@
             </div>
 
             <div class="row g-2">
-              <!-- Phone Number of business. -->
+              <!-- Phone Number of business?. -->
               <div class="col-md-5">
                 <div class="form-floating mb-2">
                   <input
-                    :id="`business-phone-${business.directoryIdx}`"
+                    :id="`business-phone-${business?.directoryIdx}`"
                     v-model.number="businessForm.phone"
                     type="number"
                     class="form-control"
                     placeholder="Business Phone Number"
                     autocomplete="tel"
                   />
-                  <label :for="`business-phone-${business.directoryIdx}`">
+                  <label :for="`business-phone-${business?.directoryIdx}`">
                     Phone Number
                   </label>
                 </div>
               </div>
 
-              <!-- Email of business. -->
+              <!-- Email of business?. -->
               <div class="col-md-7">
                 <div class="form-floating mb-2">
                   <input
-                    :id="`business-email-${business.directoryIdx}`"
+                    :id="`business-email-${business?.directoryIdx}`"
                     v-model="businessForm.email"
                     type="email"
                     class="form-control"
                     placeholder="Business Email"
                     autocomplete="email"
                   />
-                  <label :for="`business-email-${business.directoryIdx}`">
+                  <label :for="`business-email-${business?.directoryIdx}`">
                     Business Email
                   </label>
                 </div>
@@ -174,14 +174,14 @@
             <!-- Business Website. -->
             <div class="form-floating mb-2">
               <input
-                :id="`business-website-${business.directoryIdx}`"
+                :id="`business-website-${business?.directoryIdx}`"
                 v-model="businessForm.website"
                 type="url"
                 class="form-control"
                 placeholder="business website"
                 autocomplete="url"
               />
-              <label :for="`business-website-${business.directoryIdx}`">
+              <label :for="`business-website-${business?.directoryIdx}`">
                 Business Website
               </label>
             </div>
@@ -189,13 +189,13 @@
             <!-- Notes.-->
             <div class="form-floating">
               <textarea
-                :id="`business-note-${business.directoryIdx}`"
+                :id="`business-note-${business?.directoryIdx}`"
                 v-model="businessForm.notes"
                 class="form-control"
                 placeholder="Leave a note here"
                 style="height: 100px"
               ></textarea>
-              <label :for="`business-note-${business.directoryIdx}`">
+              <label :for="`business-note-${business?.directoryIdx}`">
                 Notes
               </label>
             </div>
@@ -220,71 +220,39 @@
   </teleport>
 </template>
 
-<script>
+<script lang="ts">
+/* eslint-disable import/extensions */
+import { computed, defineComponent, inject, Ref, ref } from 'vue';
+import { IBusiness, IBusinessForm } from '../../interfaces';
+import useBackend from '../composables/useBackend';
+import useFormatting from '../composables/useFormatting';
+
 /* eslint-disable no-console */
-export default {
+export default defineComponent({
   name: 'BusinessListModal',
 
   setup() {
-    // API Base URI.
-    const baseUrl = 'https://heartofkenya.com';
+    const business: undefined | IBusiness = inject('business');
 
-    // Retrive the business and categories from the parent component.
-    const business = Vue.inject('business');
-    const categories = Vue.inject('categories');
+    // Backend properties.
+    const { categories, updateBusiness } = useBackend();
 
-    /**
-     * Update a business
-     *
-     * @param data {IBusinessForm} User input data
-     * @author Brian K. Kiragu <bkariuki@hotmail.com>
-     */
-    const updateBusiness = async (data) => {
-      // Launch the request.
-      const response = await fetch(baseUrl, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      });
-
-      // Check for errors.
-      if (!response.ok) {
-        throw new Error(`There was an error ${response.statusText}`);
-      }
-
-      // Get the data from the request.
-      return response.json();
-    };
-
-    /**
-     * Convert a word/phrase to 'Title Case'.
-     *
-     * @param {string} value
-     * @returns {string}
-     *
-     * @author Brian Kariuki Kiragu <bkariuki@hotmail.com>
-     */
-    const toTitle = (value) =>
-      value
-        .split('-')
-        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-        .join(' ');
+    // Formatting methods.
+    const { toTitle } = useFormatting();
 
     // Populate the form values.
-    const businessForm = Vue.reactive({
-      title: business.title,
-      category: business.category.toLowerCase(),
-      city: business.city,
+    const businessForm: Ref<IBusinessForm> = ref({
+      title: business!.title,
+      category: business!.category.toLowerCase(),
+      city: business!.city,
       phone: '',
       email: '',
-      website: business.website ? business.website : '',
+      website: business?.website ? business?.website : '',
       notes: '',
     });
 
     // If category not in available categories.
-    const isInCategories = Vue.computed(() => false);
+    const isInCategories = computed(() => false);
 
     /**
      * When a user clicks submit.
@@ -292,7 +260,7 @@ export default {
      * @author Brian K. Kiragu <bkariuki@hotmail.com>
      */
     const onSubmit = () => {
-      updateBusiness(businessForm)
+      updateBusiness(businessForm.value)
         .then((res) => console.log(res))
         .catch((err) => console.error(err));
     };
@@ -306,7 +274,7 @@ export default {
       onSubmit,
     };
   },
-};
+});
 </script>
 
 <style scoped>
