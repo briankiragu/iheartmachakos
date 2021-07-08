@@ -1,3 +1,4 @@
+/* eslint-disable import/extensions */
 import { computed, Ref, ref } from "vue";
 import { IBusiness, IBusinessForm, ICategory, IPaginatedBusinessResponse, IPaginatedCategoryResponse } from "../../interfaces";
 
@@ -7,46 +8,8 @@ const baseUrl: string = 'https://heartofkenya.com';
 export default function useBackend() {
   const searchTerm: Ref<string> = ref('');
   const filterTerm: Ref<string> = ref('');
-  const categories: Ref<ICategory[]> = ref([
-    {
-      "param": "beauty",
-      "title": "Beauty and Health",
-      "status": "Active"
-    },
-    {
-      "param": "bookstores",
-      "title": "Book Stores",
-      "status": "Active"
-    }
-  ]);
-  const businesses: Ref<IBusiness[]> = ref([
-    {
-      "directoryIdx": 4,
-      "worldid": "kenyaheart",
-      "library": "Machakos",
-      "category": "Beauty",
-      "title": "Ruth Beauty Parlour",
-      "owner": "Bernard",
-      "website": "",
-      "city": "Machakos",
-      "localowned": null,
-      "status": "Active",
-      "modified": "4/16/2021 11:55:35 PM"
-    },
-    {
-      "directoryIdx": 1,
-      "worldid": "kenyaheart",
-      "library": "machakos",
-      "category": "bookstores",
-      "title": "Chap Chap Enterprise",
-      "owner": "Richard Wasike",
-      "website": null,
-      "city": "Machakos",
-      "localowned": "true",
-      "status": "Active",
-      "modified": ""
-    }
-  ]);
+  const categories: Ref<ICategory[]> = ref([]);
+  const businesses: Ref<IBusiness[]> = ref([]);
 
   const hasCategories: Ref<boolean> = computed(() => categories.value.length > 0)
   const hasBusinesses: Ref<boolean> = computed(() => businesses.value.length > 0)
