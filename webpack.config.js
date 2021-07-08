@@ -10,11 +10,12 @@ module.exports = {
   ],
   output: {
     filename: 'build.js',
-    path: path.resolve(__dirname, './dist'),
-    publicPath: '/dist/'
+    path: path.resolve(__dirname, './assets/js/machakos'),
+    publicPath: '/assets/js/machakos/'
   },
   resolve: {
     alias: {
+      '@src': path.resolve(__dirname, 'src/'),
       vue: 'vue/dist/vue.esm-bundler.js'
     },
     extensions: ['.js', '.ts', '.jsx', '.tsx', '.vue']
