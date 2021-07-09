@@ -5,6 +5,23 @@ import { IBusiness, IBusinessForm, ICategory, IPaginatedBusinessResponse, IPagin
 // API Base URI.
 const baseUrl: string = 'https://heartofkenya.com';
 
+/**
+ * Get form data from the input object.
+ *
+ * @param input User input from form
+ * @returns {FormData} data
+ *
+ * @author Brian K. Kiragu <bkariuki@hotmail.com>
+ */
+const getFormData =
+  (input: any, formId: string = 'BusinessDirectory'): FormData => {
+    const data = new FormData();
+    Object.keys(input).forEach((key) => data.append(key, input[key]));
+    data.append('formid', formId);
+    return data;
+  };
+
+
 export default function useBackend() {
   const searchTerm: Ref<string> = ref('');
   const filterTerm: Ref<string> = ref('');
@@ -50,14 +67,21 @@ export default function useBackend() {
    * @param data {IBusinessForm} User input data
    * @author Brian K. Kiragu <bkariuki@hotmail.com>
    */
-  const updateBusiness = async (data: IBusinessForm): Promise<void> => {
+  const storeBusiness = async (data: IBusinessForm): Promise<object> => {
+    // Get the query params.
+    const urlParams: string = new URLSearchParams({
+      cmd: 'custom',
+      subcmd: 'saveRecord',
+      config: 'directoryMachakosJson'
+    }).toString();
+
+    // Set the request endpoint.
+    const endpoint = `${baseUrl}/jcmd?${urlParams}`;
+
     // Launch the request.
-    const response = await fetch(baseUrl, {
+    const response = await fetch(endpoint, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
+      body: getFormData(data, 'BusinessDirectory')
     });
 
     // Check for errors.
@@ -68,6 +92,13 @@ export default function useBackend() {
     // Get the data from the request.
     return response.json();
   }
+
+  /**
+   * Function to add a new business.
+   *
+   * @author Brian K. Kiragu <bkariuki@hotmail.com>
+   */
+  const updateBusiness = async (): Promise<void> => { }
 
   /**
   * Function to query categories.
@@ -109,6 +140,7 @@ export default function useBackend() {
     hasBusinesses,
     getCategories,
     getBusinesses,
+    storeBusiness,
     updateBusiness
   };
 };

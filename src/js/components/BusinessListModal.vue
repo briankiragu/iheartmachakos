@@ -89,7 +89,7 @@
 
             <div class="row g-2">
               <!-- Category of business?. -->
-              <div v-if="categories" class="col mb-2">
+              <div class="col mb-2">
                 <div class="form-floating">
                   <select
                     :id="`business-category-${business?.directoryIdx}`"
@@ -222,7 +222,7 @@
 
 <script lang="ts">
 /* eslint-disable import/extensions */
-import { computed, defineComponent, inject, Ref, ref } from 'vue';
+import { defineComponent, inject, reactive, ref, Ref, watch } from 'vue';
 import { IBusiness, IBusinessForm, ICategory } from '../../interfaces';
 import useBackend from '../composables/useBackend';
 import useFormatting from '../composables/useFormatting';
@@ -235,6 +235,8 @@ export default defineComponent({
     const business: undefined | IBusiness = inject('business');
     const categories: undefined | ICategory[] = inject('categories');
 
+    const isInCategories: Ref<boolean> = ref(true);
+
     // Backend properties.
     const { updateBusiness } = useBackend();
 
@@ -242,7 +244,7 @@ export default defineComponent({
     const { toTitle } = useFormatting();
 
     // Populate the form values.
-    const businessForm: Ref<IBusinessForm> = ref({
+    const businessForm: IBusinessForm = reactive({
       title: business!.title,
       category: business!.category.toLowerCase(),
       city: business!.city,
@@ -252,17 +254,14 @@ export default defineComponent({
       notes: '',
     });
 
-    // If category not in available categories.
-    const isInCategories = computed(() => {
-      if (categories) {
-        return (
-          categories?.find(
-            (category) => category.param === businessForm.value.category
-          ) !== null
-        );
+    // When a category is changed that isn't in the list of categories.
+    watch(
+      () => businessForm.category,
+      (val) => {
+        isInCategories.value =
+          categories?.find((category) => category.param === val) !== undefined;
       }
-      return false;
-    });
+    );
 
     /**
      * When a user clicks submit.
@@ -270,7 +269,7 @@ export default defineComponent({
      * @author Brian K. Kiragu <bkariuki@hotmail.com>
      */
     const onSubmit = () => {
-      updateBusiness(businessForm.value)
+      updateBusiness()
         .then((res) => console.log(res))
         .catch((err) => console.error(err));
     };

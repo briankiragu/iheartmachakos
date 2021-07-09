@@ -2,7 +2,7 @@
   <!-- Button trigger modal -->
   <button
     type="button"
-    class="btn btn-primary"
+    class="business-list-add__trigger btn btn-primary"
     data-bs-toggle="modal"
     data-bs-target="#newBusinessModal"
   >
@@ -89,38 +89,6 @@
             </div>
           </div>
 
-          <div class="row g-2">
-            <!-- Phone Number of business. -->
-            <div class="col-md-5">
-              <div class="form-floating mb-2">
-                <input
-                  :id="`business-phone`"
-                  v-model.number="businessForm.phone"
-                  type="number"
-                  class="form-control"
-                  placeholder="Business Phone Number"
-                  autocomplete="tel"
-                />
-                <label :for="`business-phone`"> Phone Number </label>
-              </div>
-            </div>
-
-            <!-- Email of business. -->
-            <div class="col-md-7">
-              <div class="form-floating mb-2">
-                <input
-                  :id="`business-email`"
-                  v-model="businessForm.email"
-                  type="email"
-                  class="form-control"
-                  placeholder="Business Email"
-                  autocomplete="email"
-                />
-                <label :for="`business-email`"> Business Email </label>
-              </div>
-            </div>
-          </div>
-
           <!-- Business Website. -->
           <div class="form-floating mb-2">
             <input
@@ -181,7 +149,7 @@ export default defineComponent({
     const categories: undefined | ICategory[] = inject('categories');
 
     // Get backend properties.
-    const { updateBusiness } = useBackend();
+    const { storeBusiness } = useBackend();
 
     // Formatting methods.
     const { toTitle } = useFormatting();
@@ -191,8 +159,6 @@ export default defineComponent({
       title: '',
       category: '',
       city: '',
-      phone: '',
-      email: '',
       website: '',
       notes: '',
     });
@@ -201,7 +167,7 @@ export default defineComponent({
      * When a user submits their input.
      */
     const onSubmit = (): void => {
-      updateBusiness(businessForm.value)
+      storeBusiness(businessForm.value)
         .then((res) => console.log(res))
         .catch((err) => console.error(err));
     };
@@ -211,9 +177,11 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.business-list-add__trigger {
-  background-color: #e0e7ff;
-  font-weight: 700;
+<style lang="scss" scoped>
+.business-list-add {
+  &__trigger {
+    font-size: 0.9rem;
+    font-weight: normal;
+  }
 }
 </style>

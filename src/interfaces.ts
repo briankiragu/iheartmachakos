@@ -5,6 +5,7 @@ export interface IBusiness {
   city: string;
   owner: string;
   website: null | string;
+  status?: string;
 }
 
 export interface ICategory {
@@ -29,8 +30,6 @@ export interface IBusinessForm {
   title: string;
   category: string;
   city: string;
-  phone: string;
-  email: string;
   website: string;
   notes: string;
 }
