@@ -23,9 +23,9 @@
           class="mb-5 mb-md-4"
         />
 
-        <!-- <div class="align-self-end mb-4">
+        <div class="align-self-end mb-4">
           <BusinessAdd />
-        </div> -->
+        </div>
 
         <div v-if="hasBusinesses">
           <BusinessList :businesses="businesses" />
@@ -58,9 +58,9 @@ const BusinessFilter = defineAsyncComponent(
 const BusinessSearchbar = defineAsyncComponent(
   () => import('./js/components/BusinessSearchbar.vue')
 );
-// const BusinessAdd = defineAsyncComponent(
-//   () => import('./js/components/BusinessAdd.vue')
-// );
+const BusinessAdd = defineAsyncComponent(
+  () => import('./js/components/BusinessAdd.vue')
+);
 const BusinessList = defineAsyncComponent(
   () => import('./js/components/BusinessList.vue')
 );
@@ -69,7 +69,7 @@ export default defineComponent({
   components: {
     BusinessFilter,
     BusinessSearchbar,
-    // BusinessAdd,
+    BusinessAdd,
     BusinessList,
   },
 
