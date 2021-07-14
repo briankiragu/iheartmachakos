@@ -13,7 +13,7 @@
           type="button"
           data-toggle="collapse"
           data-target="#collapseOne"
-          aria-expanded="true"
+          :aria-expanded="isExpanded"
           aria-controls="collapseOne"
         >
           <div class="business-filter__title">
@@ -31,7 +31,8 @@
 
       <div
         id="collapseOne"
-        class="collapse show"
+        class="collapse"
+        :class="{ show: isExpanded }"
         aria-labelledby="categoryHeading"
         data-parent="#categoryAccordion"
       >
@@ -70,6 +71,7 @@ export default defineComponent({
   setup(props, { emit }) {
     // Count the number of filters.
     const filterCount = computed(() => props.items.length);
+    const isExpanded = computed(() => props.items.length <= 10);
 
     // Applied filters.
     const filters: Ref<string[]> = ref([]);
@@ -91,7 +93,7 @@ export default defineComponent({
       emit('filtered', filters);
     };
 
-    return { filters, filterCount, updateFilters };
+    return { filters, filterCount, isExpanded, updateFilters };
   },
 });
 </script>
