@@ -96,7 +96,12 @@ export default defineComponent({
 
       // Get the current query parameters.
       const urlSearchParams = new URLSearchParams(window.location.search);
-      const { search } = Object.fromEntries(urlSearchParams.entries());
+      const { search, category } = Object.fromEntries(
+        urlSearchParams.entries()
+      );
+
+      // Set the filter and search terms.
+      filterTerm.value = category;
       searchTerm.value = search;
 
       // Get the first businesses on page load.
@@ -111,7 +116,7 @@ export default defineComponent({
         .then((response) => {
           categories.value = [
             ...response.data.filter(
-              (category) => category.status.toLowerCase() === 'active'
+              (catgry) => catgry.status.toLowerCase() === 'active'
             ),
           ];
         })
