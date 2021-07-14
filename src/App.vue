@@ -20,7 +20,7 @@
         <BusinessSearchbar
           v-model="searchTerm"
           :on-submit="onSubmit"
-          class="mb-5"
+          class="mb-5 mb-md-4"
         />
 
         <!-- <div class="align-self-end mb-4">
