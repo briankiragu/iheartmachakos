@@ -94,8 +94,13 @@ export default defineComponent({
       // Set to loading.
       isLoading.value = true;
 
+      // Get the current query parameters.
+      const urlSearchParams = new URLSearchParams(window.location.search);
+      const { search } = Object.fromEntries(urlSearchParams.entries());
+      searchTerm.value = search;
+
       // Get the first businesses on page load.
-      getBusinesses(pageNo.value)
+      getBusinesses(pageNo.value, searchTerm.value)
         .then((response) => {
           businesses.value = [...response.data];
         })
@@ -121,8 +126,8 @@ export default defineComponent({
           // Add the page count.
           pageNo.value += 1;
 
-          // Get the requests.
-          getBusinesses(pageNo.value)
+          // Get the requests as per the search term.
+          getBusinesses(pageNo.value, searchTerm.value)
             .then((response) => {
               // Check if any new data was returned.
               if (response.data.length > 0) {
