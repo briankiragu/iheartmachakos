@@ -155,6 +155,16 @@ export default defineComponent({
     // When a user submits a form.
     const onSubmit = () => {
       console.log(`Submitting the form`);
+
+      // Reset the page counter.
+      pageNo.value = 1;
+
+      // Submit the request with the new search term(s).
+      getBusinesses(pageNo.value, searchTerm.value)
+        .then((response) => {
+          businesses.value = [...response.data];
+        })
+        .catch((err) => console.error(err.message));
     };
 
     // Provide the categories and updateBusiness to the children.

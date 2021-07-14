@@ -148,7 +148,7 @@ export default function useBackend() {
    * @author Brian K. Kiragu <bkariuki@hotmail.com>
    */
   const updateBusiness = async (
-    directoryId: number,
+    directoryIdx: number,
     data: IBusinessForm
   ): Promise<object> => {
     // Get the query params.
@@ -164,7 +164,9 @@ export default function useBackend() {
     // Launch the request.
     const response = await fetch(endpoint, {
       method: 'POST',
-      body: getFormData(data, 'BusinessDirectory')
+      body: getFormData(
+        { ...data, ...{ directoryIdx } },
+        'BusinessDirectory')
     });
 
     // Check for errors.
