@@ -9,9 +9,9 @@
     </div>
 
     <div class="row">
-      <div class="col-md-4 p-3">
+      <div class="col-md-4 p-4">
         <!-- Categories. -->
-        <BusinessFilter :items="categories" />
+        <BusinessFilter :items="categories" @filtered="updateFilterQuery" />
       </div>
 
       <!-- Result. -->
@@ -130,11 +130,16 @@ export default defineComponent({
           // Set the state from loading.
           isLoading.value = false;
         }
-      };
+
 
       // Set from loading.
       isLoading.value = false;
     });
+
+    // Update the filter query.
+    const updateFilterQuery = (filters: Ref<string[]>) => {
+      console.dir(filters.value);
+    };
 
     // Provide the categories and updateBusiness to the children.
     provide('categories', categories);
@@ -146,6 +151,7 @@ export default defineComponent({
       categories,
       businesses,
       hasBusinesses,
+      updateFilterQuery,
     };
   },
 });

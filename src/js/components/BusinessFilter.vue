@@ -3,17 +3,29 @@
     <div class="card">
       <div id="categoryHeading" class="card-header">
         <button
-          class="btn btn-link btn-block text-left"
+          class="
+            btn btn-link btn-block
+            text-left
+            d-flex
+            justify-content-between
+            align-items-center
+          "
           type="button"
           data-toggle="collapse"
           data-target="#collapseOne"
           aria-expanded="true"
           aria-controls="collapseOne"
         >
-          <h2 class="business-filter__heading mb-1">Filter by category</h2>
-          <h4 class="business-filter__subheading mb-0">
-            {{ filterCount }} categories available
-          </h4>
+          <div class="business-filter__title">
+            <h2 class="business-filter__heading mb-1">Filter by category</h2>
+            <h4 class="business-filter__subheading mb-0">
+              {{ filterCount }} categories available
+            </h4>
+          </div>
+
+          <div class="business-filter__icon">
+            <i class="fas fa-caret-down"></i>
+          </div>
         </button>
       </div>
 
@@ -29,6 +41,8 @@
             :key="item.param"
             :item="item"
             class="mb-2 mr-2"
+            :active="filters.includes(item.param)"
+            @selected="updateFilters"
           />
         </div>
       </div>
@@ -38,7 +52,7 @@
 
 <script lang="ts">
 /* eslint-disable import/extensions */
-import { computed, defineAsyncComponent, defineComponent } from 'vue';
+import { computed, defineAsyncComponent, defineComponent, ref, Ref } from 'vue';
 import { ICategory } from '../../interfaces';
 
 const BusinessFilterItem = defineAsyncComponent(
@@ -51,12 +65,33 @@ export default defineComponent({
   props: {
     items: { type: Array as () => ICategory[], default: () => [] },
   },
+  emits: ['filtered'],
 
-  setup(props) {
+  setup(props, { emit }) {
     // Count the number of filters.
     const filterCount = computed(() => props.items.length);
 
-    return { filterCount };
+    // Applied filters.
+    const filters: Ref<string[]> = ref([]);
+
+    // When a filter item is selected.
+    const updateFilters = (value: string) => {
+      // Check if the item is in the filters already.
+      const index = filters.value.findIndex((filter) => filter === value);
+
+      if (index >= 0) {
+        // If it exists, remove it from the filters.
+        filters.value.splice(index, 1);
+      } else {
+        // If it does not exist, add it to the list.
+        filters.value = [...filters.value, value];
+      }
+
+      // Emit the updated filters.
+      emit('filtered', filters);
+    };
+
+    return { filters, filterCount, updateFilters };
   },
 });
 </script>
@@ -83,7 +118,7 @@ $accent-color: #4a7dbf;
   &__subheading {
     color: rgba($primary-color, 1);
     font-family: 'Inter', sans-serif;
-    font-size: 1rem;
+    font-size: 0.94rem;
     font-weight: 400;
   }
 }
