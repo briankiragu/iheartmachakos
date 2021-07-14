@@ -9,16 +9,19 @@
     </div>
 
     <div class="row">
-      <div class="col-md-4 p-4">
+      <div class="col-md-4 pb-4 px-4 pt-4 p-md-4">
         <!-- Categories. -->
         <BusinessFilter :items="categories" @filtered="updateFilterQuery" />
       </div>
 
       <!-- Result. -->
-      <div class="businesses col p-5 d-flex flex-column">
-        <div class="align-self-end mb-4">
+      <div class="businesses col px-4 py-0 py-md-4 d-flex flex-column">
+        <!-- Searchbar. -->
+        <BusinessSearchbar v-model="searchTerm" class="mb-5" />
+
+        <!-- <div class="align-self-end mb-4">
           <BusinessAdd />
-        </div>
+        </div> -->
 
         <div v-if="hasBusinesses">
           <BusinessList :businesses="businesses" />
@@ -48,6 +51,9 @@ import useBackend from './js/composables/useBackend';
 const BusinessFilter = defineAsyncComponent(
   () => import('./js/components/BusinessFilter.vue')
 );
+const BusinessSearchbar = defineAsyncComponent(
+  () => import('./js/components/BusinessSearchbar.vue')
+);
 const BusinessAdd = defineAsyncComponent(
   () => import('./js/components/BusinessAdd.vue')
 );
@@ -58,6 +64,7 @@ const BusinessList = defineAsyncComponent(
 export default defineComponent({
   components: {
     BusinessFilter,
+    BusinessSearchbar,
     BusinessAdd,
     BusinessList,
   },

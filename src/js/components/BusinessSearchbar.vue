@@ -1,15 +1,15 @@
 <template>
-  <div class="business-list-searchbar form-floating mb-3">
-    <input
-      id="business-search-bar"
-      type="search"
-      class="form-control"
-      placeholder="Enter name of business"
-      autocomplete="organization"
-      :value="searchTerm"
-      @input="onSearch($event)"
-    />
-    <label for="business-search-bar">Search for a businesses by name</label>
+  <div class="business-searchbar form-row mb-3">
+    <div class="col mb-2">
+      <input
+        type="search"
+        class="form-control"
+        placeholder="Search for a business"
+      />
+    </div>
+    <div class="col-md-2">
+      <button type="submit" class="btn btn-block btn-primary">Search</button>
+    </div>
   </div>
 </template>
 
@@ -33,12 +33,26 @@ export default defineComponent({
 });
 </script>
 
-<style scoped>
-.business-list-searchbar input {
-  font-size: 0.9rem;
-}
+<style lang="scss" scoped>
+.business-searchbar {
+  input,
+  button {
+    font-family: 'Inter', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 400;
+    height: 53px;
+    transition: all 0.3s ease-in-out;
+  }
 
-.business-list-searchbar label {
-  font-size: 1rem;
+  .form-control {
+    padding: 23px;
+  }
+
+  .form-control:focus,
+  button:hover {
+    border: none;
+    box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
+      rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;
+  }
 }
 </style>
