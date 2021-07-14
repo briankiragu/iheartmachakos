@@ -5,10 +5,19 @@
         type="search"
         class="form-control"
         placeholder="Search for a business"
+        autocomplete="organization"
+        :value="modelValue"
+        @input.prevent="onSearch($event)"
       />
     </div>
     <div class="col-md-2">
-      <button type="submit" class="btn btn-block btn-primary">Search</button>
+      <button
+        type="submit"
+        class="btn btn-block btn-primary"
+        @click.prevent="() => onSubmit()"
+      >
+        Search
+      </button>
     </div>
   </div>
 </template>
@@ -19,13 +28,14 @@ import { defineComponent } from 'vue';
 export default defineComponent({
   name: 'BusinessSearchbar',
   props: {
-    searchTerm: { type: String, default: '' },
+    modelValue: { type: String, default: '' },
+    onSubmit: { type: Function, default: () => {} },
   },
-  emits: ['update:searchTerm'],
+  emits: ['update:modelValue'],
 
   setup(props, { emit }) {
     const onSearch = (e: any) => {
-      emit('update:searchTerm', e.target.value);
+      emit('update:modelValue', e.target.value);
     };
 
     return { onSearch };
@@ -49,7 +59,8 @@ export default defineComponent({
   }
 
   .form-control:focus,
-  button:hover {
+  button:hover,
+  button:focus {
     border: none;
     box-shadow: rgba(50, 50, 93, 0.25) 0px 6px 12px -2px,
       rgba(0, 0, 0, 0.3) 0px 3px 7px -3px;

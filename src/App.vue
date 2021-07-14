@@ -17,7 +17,11 @@
       <!-- Result. -->
       <div class="businesses col px-4 py-0 py-md-4 d-flex flex-column">
         <!-- Searchbar. -->
-        <BusinessSearchbar v-model="searchTerm" class="mb-5" />
+        <BusinessSearchbar
+          v-model="searchTerm"
+          :on-submit="onSubmit"
+          class="mb-5"
+        />
 
         <!-- <div class="align-self-end mb-4">
           <BusinessAdd />
@@ -54,9 +58,9 @@ const BusinessFilter = defineAsyncComponent(
 const BusinessSearchbar = defineAsyncComponent(
   () => import('./js/components/BusinessSearchbar.vue')
 );
-const BusinessAdd = defineAsyncComponent(
-  () => import('./js/components/BusinessAdd.vue')
-);
+// const BusinessAdd = defineAsyncComponent(
+//   () => import('./js/components/BusinessAdd.vue')
+// );
 const BusinessList = defineAsyncComponent(
   () => import('./js/components/BusinessList.vue')
 );
@@ -65,7 +69,7 @@ export default defineComponent({
   components: {
     BusinessFilter,
     BusinessSearchbar,
-    BusinessAdd,
+    // BusinessAdd,
     BusinessList,
   },
 
@@ -137,7 +141,7 @@ export default defineComponent({
           // Set the state from loading.
           isLoading.value = false;
         }
-
+      };
 
       // Set from loading.
       isLoading.value = false;
@@ -146,6 +150,11 @@ export default defineComponent({
     // Update the filter query.
     const updateFilterQuery = (filters: Ref<string[]>) => {
       console.dir(filters.value);
+    };
+
+    // When a user submits a form.
+    const onSubmit = () => {
+      console.log(`Submitting the form`);
     };
 
     // Provide the categories and updateBusiness to the children.
@@ -159,6 +168,7 @@ export default defineComponent({
       businesses,
       hasBusinesses,
       updateFilterQuery,
+      onSubmit,
     };
   },
 });

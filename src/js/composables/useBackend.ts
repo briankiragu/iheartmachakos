@@ -147,7 +147,34 @@ export default function useBackend() {
    *
    * @author Brian K. Kiragu <bkariuki@hotmail.com>
    */
-  const updateBusiness = async (): Promise<void> => { }
+  const updateBusiness = async (
+    directoryId: number,
+    data: IBusinessForm
+  ): Promise<object> => {
+    // Get the query params.
+    const urlParams: string = new URLSearchParams({
+      cmd: 'custom',
+      subcmd: 'saveRecord',
+      config: 'directoryMachakosJson'
+    }).toString();
+
+    // Set the request endpoint.
+    const endpoint = `${baseUrl}/jcmd?${urlParams}`;
+
+    // Launch the request.
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      body: getFormData(data, 'BusinessDirectory')
+    });
+
+    // Check for errors.
+    if (!response.ok) {
+      throw new Error(`There was an error ${response.statusText}`);
+    }
+
+    // Get the data from the request.
+    return response.json();
+  }
 
   /**
   * Function to query categories.
