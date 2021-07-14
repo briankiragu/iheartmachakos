@@ -11,7 +11,7 @@
     <div class="row">
       <div class="col-md-4 pb-4 px-4 pt-4 p-md-4">
         <!-- Categories. -->
-        <BusinessFilter :items="categories" @filtered="updateFilterQuery" />
+        <BusinessFilter v-model="filterTerm" :items="categories" />
       </div>
 
       <!-- Result. -->

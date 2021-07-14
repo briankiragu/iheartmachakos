@@ -53,7 +53,14 @@
 
 <script lang="ts">
 /* eslint-disable import/extensions */
-import { computed, defineAsyncComponent, defineComponent, ref, Ref } from 'vue';
+import {
+  computed,
+  defineAsyncComponent,
+  defineComponent,
+  onMounted,
+  ref,
+  Ref,
+} from 'vue';
 import { ICategory } from '../../interfaces';
 
 const BusinessFilterItem = defineAsyncComponent(
@@ -64,9 +71,10 @@ export default defineComponent({
   name: 'BusinessFilter',
   components: { BusinessFilterItem },
   props: {
+    modelValue: { type: String, default: '' },
     items: { type: Array as () => ICategory[], default: () => [] },
   },
-  emits: ['filtered'],
+  emits: ['update:modelValue'],
 
   setup(props, { emit }) {
     // Count the number of filters.
@@ -89,9 +97,14 @@ export default defineComponent({
         filters.value = [...filters.value, value];
       }
 
-      // Emit the updated filters.
-      emit('filtered', filters);
+      // Emit the updated filters as a string.
+      emit('update:modelValue', filters.value.join(','));
     };
+
+    // Pre-fill the filters.
+    onMounted(() => {
+      filters.value = props.modelValue.split(',').filter((val) => val);
+    });
 
     return { filters, filterCount, isExpanded, updateFilters };
   },
