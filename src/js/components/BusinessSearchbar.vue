@@ -17,7 +17,7 @@
 import { defineComponent } from 'vue';
 
 export default defineComponent({
-  name: 'BusinessListSearchbar',
+  name: 'BusinessSearchbar',
   props: {
     searchTerm: { type: String, default: '' },
   },

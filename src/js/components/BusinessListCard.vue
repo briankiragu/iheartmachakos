@@ -50,7 +50,9 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable import/extensions */
 import { defineAsyncComponent, defineComponent, provide } from 'vue';
+import { IBusiness } from '../../interfaces';
 
 const BusinessListView = defineAsyncComponent(
   () => import('./BusinessListView.vue')
@@ -61,12 +63,12 @@ export default defineComponent({
   components: { BusinessListView },
 
   props: {
-    business: { type: Object, default: () => {} },
+    business: { type: Object as () => IBusiness, default: () => {} },
   },
 
   setup(props) {
     // Check if the business is locally owned.
-    const isLocallyOwned: boolean = props.business.localowned === 'true';
+    const isLocallyOwned: boolean = props.business.owner !== '';
 
     // Provide the business to all children.
     provide('business', props.business);
@@ -84,7 +86,6 @@ export default defineComponent({
 .business-list-card__image img {
   border-top-left-radius: 0.3rem;
   border-bottom-left-radius: 0.3rem;
-  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
   height: 100px;
 }
 

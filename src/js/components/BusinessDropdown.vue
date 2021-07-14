@@ -27,7 +27,7 @@ import { ICategory } from '../../interfaces';
 import useFormatting from '../composables/useFormatting';
 
 export default defineComponent({
-  name: 'BusinessListDropdown',
+  name: 'BusinessDropdown',
   props: {
     filterTerm: { type: String, default: '' },
   },

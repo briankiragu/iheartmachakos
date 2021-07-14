@@ -123,7 +123,11 @@
           >
             Close
           </button>
-          <button type="submit" class="btn btn-primary">
+          <button
+            type="submit"
+            class="btn btn-primary"
+            :class="{ disabled: isLoading }"
+          >
             Add new business
           </button>
         </div>
@@ -142,9 +146,12 @@ import useFormatting from '../composables/useFormatting';
 
 /* eslint-disable no-console */
 export default defineComponent({
-  name: 'BusinessListAdd',
+  name: 'BusinessAdd',
 
   setup() {
+    // Set the loading state.
+    const isLoading: Ref<boolean> = ref(false);
+
     // Retrive the categories from the parent component.
     const categories: undefined | ICategory[] = inject('categories');
 
@@ -167,12 +174,19 @@ export default defineComponent({
      * When a user submits their input.
      */
     const onSubmit = (): void => {
+      // Set the state to loading.
+      isLoading.value = true;
+
+      // Send the request.
       storeBusiness(businessForm.value)
         .then((res) => console.log(res))
-        .catch((err) => console.error(err));
+        .catch((err) => console.error(err))
+        .finally(() => {
+          isLoading.value = false;
+        });
     };
 
-    return { categories, businessForm, toTitle, onSubmit };
+    return { isLoading, categories, businessForm, toTitle, onSubmit };
   },
 });
 </script>

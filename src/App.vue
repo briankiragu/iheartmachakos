@@ -1,26 +1,152 @@
 <template>
-  <BusinessList />
+  <div class="container-fluid" style="font-size: 14px">
+    <div id="teleport">
+      <!-- Page Views. -->
+      <div id="business-views"></div>
+
+      <!-- Modals. -->
+      <div id="business-modals"></div>
+    </div>
+
+    <div class="row">
+      <div class="col-md-4 p-3">
+        <!-- Categories. -->
+        <BusinessFilter :items="categories" />
+      </div>
+
+      <!-- Result. -->
+      <div class="businesses col p-5 d-flex flex-column">
+        <div class="align-self-end mb-4">
+          <BusinessAdd />
+        </div>
+
+        <div v-if="hasBusinesses">
+          <BusinessList :businesses="businesses" />
+        </div>
+
+        <div v-else class="text-center">
+          <p class="text-muted">No businesses to display</p>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
-import { defineAsyncComponent, defineComponent } from 'vue';
+/* eslint-disable import/extensions */
+/* eslint-disable no-console */
+import {
+  defineAsyncComponent,
+  defineComponent,
+  onMounted,
+  provide,
+  ref,
+  Ref,
+} from 'vue';
+import useBackend from './js/composables/useBackend';
 
+const BusinessFilter = defineAsyncComponent(
+  () => import('./js/components/BusinessFilter.vue')
+);
+const BusinessAdd = defineAsyncComponent(
+  () => import('./js/components/BusinessAdd.vue')
+);
 const BusinessList = defineAsyncComponent(
   () => import('./js/components/BusinessList.vue')
 );
 
 export default defineComponent({
-  components: { BusinessList },
+  components: {
+    BusinessFilter,
+    BusinessAdd,
+    BusinessList,
+  },
 
   setup() {
+    // Get backend properties.
+    const {
+      searchTerm,
+      filterTerm,
+      businesses,
+      categories,
+      hasBusinesses,
+      getBusinesses,
+      getCategories,
+    } = useBackend();
+
+    // Declare data properties.
+    const isLoading: Ref<boolean> = ref(true);
+    const pageNo: Ref<number> = ref(1);
+
+    // Fetch the data when the component is mounted.
+    onMounted(() => {
+      // Set to loading.
+      isLoading.value = true;
+
+      // Get the first businesses on page load.
+      getBusinesses(pageNo.value)
+        .then((response) => {
+          businesses.value = [...response.data];
+        })
+        .catch((err) => console.error(err.message));
+
+      // Get the active categories on page load.
+      getCategories()
+        .then((response) => {
+          categories.value = [
+            ...response.data.filter(
+              (category) => category.status.toLowerCase() === 'active'
+            ),
+          ];
+        })
+        .catch((err) => console.error(err.message));
+
+      // Add a listener to fetch more records on scroll-to-bottom.
+      window.onscroll = () => {
+        if (window.innerHeight + window.scrollY >= document.body.scrollHeight) {
+          // Set the state to loading.
+          isLoading.value = true;
+
+          // Add the page count.
+          pageNo.value += 1;
+
+          // Get the requests.
+          getBusinesses(pageNo.value)
+            .then((response) => {
+              // Check if any new data was returned.
+              if (response.data.length > 0) {
+                // Update the businesses with the incoming data.
+                businesses.value.push(...response.data);
+              } else {
+                // Decrement the page counter.
+                pageNo.value -= 1;
+              }
+            })
+            .catch(() => {
+              // Decrement the page counter.
+              pageNo.value -= 1;
+            });
+
+          // Set the state from loading.
+          isLoading.value = false;
+        }
+      };
+
+      // Set from loading.
+      isLoading.value = false;
+    });
+
+    // Provide the categories and updateBusiness to the children.
+    provide('categories', categories);
+
     return {
-      people: [
-        { id: 32123424, name: 'James Veitch', age: 28 },
-        { id: 62164364, name: 'Libro Manhaam', age: 32 },
-      ],
+      isLoading,
+      searchTerm,
+      filterTerm,
+      categories,
+      businesses,
+      hasBusinesses,
     };
   },
 });
 </script>
-
-<style></style>
