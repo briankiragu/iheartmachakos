@@ -23,7 +23,7 @@
           :aria-controls="`business-${business.directoryIdx}-collapse`"
         >
           <div class="business-list-item__title">
-            <h2 class="business-list-item__heading mb-2">
+            <h2 class="business-list-item__heading mb-2 mb-md-1">
               {{ toTitle(business.title) }}
             </h2>
             <h4
@@ -31,33 +31,34 @@
                 business-list-item__subheading
                 mb-0
                 d-flex
-                align-items-center
+                align-items-start
               "
             >
-              <i class="fas fa-store"></i>
+              <!-- <i class="fas fa-store"></i> -->
+              <i v-if="hasOwner" class="fas fa-user-check"></i>
               {{ toTitle(business.category) }} in
               <em class="ml-1">{{ toTitle(business.city) }}</em>
             </h4>
           </div>
 
-          <div v-if="hasData" class="business-list-item__icon">
+          <div class="business-list-item__icon">
             <i class="fas fa-caret-down"></i>
           </div>
         </button>
       </div>
 
       <div
-        v-if="hasData"
         :id="`business-${business.directoryIdx}-collapse`"
         class="collapse"
         :aria-labelledby="`business-${business.directoryIdx}-heading`"
         :data-parent="`#business-${business.directoryIdx}-accordion`"
       >
         <div class="card-body">
-          <p class="mb-0">
+          <!-- Business info. -->
+          <p class="mb-2">
             <span v-if="hasOwner">
               This business is locally owned by
-              <strong>{{ toTitle(business.owner) }}</strong>
+              <strong>{{ toTitle(business.owner) }}.</strong>
             </span>
             <a
               v-if="hasWebsite"
@@ -68,6 +69,11 @@
               <i class="fas fa-external-link-alt"></i>
             </a>
           </p>
+
+          <!-- Edit button. -->
+          <BusinessListItemEdit :business="business">
+            Suggest an edit
+          </BusinessListItemEdit>
         </div>
       </div>
     </div>
@@ -76,12 +82,17 @@
 
 <script lang="ts">
 /* eslint-disable import/extensions */
-import { computed, defineComponent } from 'vue';
+import { computed, defineAsyncComponent, defineComponent } from 'vue';
 import { IBusiness } from '../../interfaces';
 import useFormatting from '../composables/useFormatting';
 
+const BusinessListItemEdit = defineAsyncComponent(
+  () => import('./BusinessListItemEdit.vue')
+);
+
 export default defineComponent({
   name: 'BusinessListItem',
+  components: { BusinessListItemEdit },
   props: {
     business: { type: Object as () => IBusiness, default: () => {} },
   },

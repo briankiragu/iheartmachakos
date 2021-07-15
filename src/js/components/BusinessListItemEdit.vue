@@ -2,30 +2,33 @@
   <!-- Button trigger modal -->
   <button
     type="button"
-    class="btn btn-block btn-primary"
+    class="business-list-item-edit__trigger btn"
     data-toggle="modal"
-    data-target="#newBusinessBackdrop"
+    :data-target="`#business${business.directoryIdx}Backdrop`"
     v-bind="$attrs"
   >
-    New Business
+    <slot>Edit Business</slot>
   </button>
 
   <!-- Modal -->
   <teleport to="#business-modals">
     <div
-      id="newBusinessBackdrop"
+      :id="`business${business.directoryIdx}Backdrop`"
       class="modal fade"
       data-backdrop="static"
       data-keyboard="false"
       tabindex="-1"
-      aria-labelledby="newBusinessBackdropLabel"
+      :aria-labelledby="`business${business.directoryIdx}BackdropLabel`"
       aria-hidden="true"
     >
       <form class="modal-dialog" @submit.prevent="onSubmit">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 id="newBusinessBackdropLabel" class="modal-title">
-              Add a new business
+            <h5
+              :id="`business${business.directoryIdx}BackdropLabel`"
+              class="modal-title"
+            >
+              Edit {{ business.title }}
             </h5>
             <button
               type="button"
@@ -41,9 +44,11 @@
           <div class="modal-body">
             <!-- Title. -->
             <div class="form-group">
-              <label :for="`new-business-title`">Title</label>
+              <label :for="`business-${business.directoryIdx}-title`">
+                Title
+              </label>
               <input
-                :id="`new-business-title`"
+                :id="`business-${business.directoryIdx}-title`"
                 v-model="businessForm.title"
                 type="text"
                 class="form-control"
@@ -56,8 +61,11 @@
             <div class="form-row">
               <!-- Category. -->
               <div v-if="categories" class="form-group col-md-7">
-                <label for="new-business-category">Category</label>
+                <label :for="`business-${business.directoryIdx}-category`">
+                  Category
+                </label>
                 <select
+                  :id="`business-${business.directoryIdx}-category`"
                   v-model="businessForm.category"
                   class="custom-select"
                   required
@@ -75,13 +83,15 @@
 
               <!-- City. -->
               <div class="form-group col">
-                <label for="new-business-city">City</label>
+                <label :for="`business-${business.directoryIdx}-city`">
+                  City
+                </label>
                 <input
-                  id="new-business-city"
+                  :id="`business-${business.directoryIdx}-city`"
                   v-model="businessForm.city"
                   type="text"
                   class="form-control"
-                  placeholder="Where is this business?"
+                  placeholder="Where is this business"
                   autocomplete="address-level2"
                   required
                 />
@@ -90,9 +100,11 @@
 
             <!-- Website. -->
             <div class="form-group">
-              <label for="new-business-website">Website</label>
+              <label :for="`business-${business.directoryIdx}-website`">
+                Website
+              </label>
               <input
-                id="new-business-website"
+                :id="`business-${business.directoryIdx}-website`"
                 v-model="businessForm.website"
                 type="url"
                 class="form-control"
@@ -102,9 +114,11 @@
             </div>
 
             <div class="form-group">
-              <label for="new-business-notes">Notes</label>
+              <label :for="`business-${business.directoryIdx}-notes`">
+                Notes
+              </label>
               <textarea
-                id="new-business-notes"
+                :id="`business-${business.directoryIdx}-notes`"
                 v-model="businessForm.notes"
                 class="form-control"
                 rows="3"
@@ -139,15 +153,17 @@
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
 import { defineComponent, inject, Ref, ref } from 'vue';
-import { IBusinessForm, ICategory } from '../../interfaces';
+import { IBusiness, IBusinessForm, ICategory } from '../../interfaces';
 import useBackend from '../composables/useBackend';
 import useFormatting from '../composables/useFormatting';
 
 /* eslint-disable no-console */
 export default defineComponent({
-  name: 'BusinessAdd',
-
-  setup() {
+  name: 'BusinessListItemEdit',
+  props: {
+    business: { type: Object as () => IBusiness, default: () => {} },
+  },
+  setup(props) {
     // Set the loading state.
     const isLoading: Ref<boolean> = ref(false);
 
@@ -155,17 +171,17 @@ export default defineComponent({
     const categories: undefined | ICategory[] = inject('categories');
 
     // Get backend properties.
-    const { storeBusiness } = useBackend();
+    const { updateBusiness } = useBackend();
 
     // Formatting methods.
     const { toTitle } = useFormatting();
 
     // Populate the form values.
     const businessForm: Ref<IBusinessForm> = ref({
-      title: '',
-      category: '',
-      city: '',
-      website: '',
+      title: props.business.title,
+      category: props.business.category.toLowerCase(),
+      city: props.business.city,
+      website: props.business.website ? props.business.website : '',
       notes: '',
     });
 
@@ -177,7 +193,7 @@ export default defineComponent({
       isLoading.value = true;
 
       // Send the request.
-      storeBusiness(businessForm.value)
+      updateBusiness(props.business.directoryIdx, businessForm.value)
         .then((res) => console.log(res))
         .catch((err) => console.error(err))
         .finally(() => {
@@ -196,5 +212,9 @@ select,
 textarea,
 button {
   font-size: 0.95rem;
+}
+
+.business-list-item-edit__trigger {
+  background-color: rgb(187, 176, 176);
 }
 </style>
