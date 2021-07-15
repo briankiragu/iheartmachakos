@@ -1,12 +1,7 @@
 <template>
   <div class="container-fluid" style="font-size: 14px">
-    <div id="teleport">
-      <!-- Page Views. -->
-      <div id="business-views"></div>
-
-      <!-- Modals. -->
-      <div id="business-modals"></div>
-    </div>
+    <!-- Modals. -->
+    <div id="business-modals"></div>
 
     <div class="row">
       <div class="col-md-4 pb-4 px-4 pt-4 p-md-4">
@@ -36,6 +31,9 @@
         </div>
       </div>
     </div>
+
+    <!-- Page Views. -->
+    <div id="business-details"></div>
   </div>
 </template>
 

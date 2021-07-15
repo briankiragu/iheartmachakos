@@ -1,7 +1,7 @@
 <template>
-  <div class="business-list">
+  <div class="business-list mb-5">
     <div class="business-list__card">
-      <BusinessListCard
+      <BusinessListItem
         v-for="business in businesses"
         :key="business.directoryIdx"
         :business="business"
@@ -16,13 +16,13 @@ import { defineAsyncComponent, defineComponent } from 'vue';
 import { IBusiness } from '../../interfaces';
 
 // Import components.
-const BusinessListCard = defineAsyncComponent(
-  () => import('./BusinessListCard.vue')
+const BusinessListItem = defineAsyncComponent(
+  () => import('./BusinessListItem.vue')
 );
 
 export default defineComponent({
   name: 'BusinessList',
-  components: { BusinessListCard },
+  components: { BusinessListItem },
   props: {
     businesses: { type: Array as () => IBusiness[], default: () => [] },
   },

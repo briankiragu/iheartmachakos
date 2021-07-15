@@ -117,11 +117,8 @@ $accent-color: #4a7dbf;
 
 .business-filter {
   button {
+    box-shadow: none;
     text-decoration: none;
-
-    &:focus {
-      box-shadow: none;
-    }
   }
 
   &__heading {
