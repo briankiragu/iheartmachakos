@@ -126,13 +126,11 @@ $accent-color: #4a7dbf;
 
   &__heading {
     color: hsl(0, 5%, 22%);
-    font-family: 'Inter', sans-serif;
     font-size: 1.2rem;
   }
 
   &__subheading {
     color: rgba($primary-color, 1);
-    font-family: 'Inter', sans-serif;
     font-size: 0.94rem;
     font-weight: 400;
   }

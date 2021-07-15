@@ -4,7 +4,7 @@
     type="button"
     class="btn btn-primary"
     data-toggle="modal"
-    data-target="#staticBackdrop"
+    data-target="#newBusinessBackdrop"
   >
     New Business
   </button>
@@ -12,18 +12,20 @@
   <!-- Modal -->
   <teleport to="#business-modals">
     <div
-      id="staticBackdrop"
+      id="newBusinessBackdrop"
       class="modal fade"
       data-backdrop="static"
       data-keyboard="false"
       tabindex="-1"
-      aria-labelledby="staticBackdropLabel"
+      aria-labelledby="newBusinessBackdropLabel"
       aria-hidden="true"
     >
-      <div class="modal-dialog">
+      <form class="modal-dialog" @submit.prevent="onSubmit">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 id="staticBackdropLabel" class="modal-title">Modal title</h5>
+            <h5 id="newBusinessBackdropLabel" class="modal-title">
+              Add a new business
+            </h5>
             <button
               type="button"
               class="close"
@@ -33,7 +35,83 @@
               <span aria-hidden="true">&times;</span>
             </button>
           </div>
-          <div class="modal-body">...</div>
+
+          <!-- Modal body. -->
+          <div class="modal-body">
+            <!-- Title. -->
+            <div class="form-group">
+              <label :for="`new-business-title`">Title</label>
+              <input
+                :id="`new-business-title`"
+                v-model="businessForm.title"
+                type="text"
+                class="form-control"
+                placeholder="What is this business called?"
+                autocomplete="organization"
+                required
+              />
+            </div>
+
+            <div class="form-row">
+              <!-- Category. -->
+              <div v-if="categories" class="form-group col-md-7">
+                <label for="new-business-category">Category</label>
+                <select
+                  v-model="businessForm.category"
+                  class="custom-select"
+                  required
+                >
+                  <option value="" disabled>Open this select menu</option>
+                  <option
+                    v-for="category of categories"
+                    :key="`category-${category.param}`"
+                    :value="category.param"
+                  >
+                    {{ toTitle(category.title) }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- City. -->
+              <div class="form-group col">
+                <label for="new-business-city">City</label>
+                <input
+                  id="new-business-city"
+                  v-model="businessForm.city"
+                  type="text"
+                  class="form-control"
+                  placeholder="Where is this business?"
+                  autocomplete="address-level2"
+                  required
+                />
+              </div>
+            </div>
+
+            <!-- Website. -->
+            <div class="form-group">
+              <label for="new-business-website">Website</label>
+              <input
+                id="new-business-website"
+                v-model="businessForm.website"
+                type="url"
+                class="form-control"
+                placeholder="https://example.com"
+                autocomplete="url"
+              />
+            </div>
+
+            <div class="form-group">
+              <label for="new-business-notes">Notes</label>
+              <textarea
+                id="new-business-notes"
+                v-model="businessForm.notes"
+                class="form-control"
+                rows="3"
+                placeholder="Any additional information?"
+              ></textarea>
+            </div>
+          </div>
+
           <div class="modal-footer">
             <button
               type="button"
@@ -42,10 +120,12 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-primary">Understood</button>
+            <button type="submit" class="btn btn-primary">
+              Add new business
+            </button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   </teleport>
 </template>
@@ -106,10 +186,10 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.business-list-add {
-  &__trigger {
-    font-size: 0.9rem;
-    font-weight: normal;
-  }
+input,
+select,
+textarea,
+button {
+  font-size: 0.95rem;
 }
 </style>

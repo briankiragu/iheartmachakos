@@ -51,13 +51,11 @@ $accent-color: #184f97;
   transition: all 0.2s cubic-bezier(0.075, 0.82, 0.165, 1);
 
   &__icon {
-    font-size: 1rem;
     margin-right: 10px;
   }
 
   &__title {
     color: $primary-color;
-    font-family: 'Inter', sans-serif;
     font-size: 0.97rem;
     font-weight: 440;
     white-space: nowrap;
@@ -70,6 +68,7 @@ $accent-color: #184f97;
   .business-filter-item__icon {
     color: $accent-color;
   }
+
   .business-filter-item__title {
     color: $accent-color;
   }

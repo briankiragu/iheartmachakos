@@ -47,7 +47,6 @@ export default defineComponent({
 .business-searchbar {
   input,
   button {
-    font-family: 'Inter', sans-serif;
     font-size: 0.95rem;
     font-weight: 400;
     height: 53px;
