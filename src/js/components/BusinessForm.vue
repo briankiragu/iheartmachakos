@@ -53,29 +53,30 @@
               />
             </div>
 
-            <div class="form-row">
-              <!-- Category. -->
-              <div v-if="categories" class="form-group col-md-7">
-                <label :for="`business-${order}-category`"> Category </label>
-                <select
-                  :id="`business-${order}-category`"
-                  v-model="businessForm.category"
-                  class="custom-select"
-                  required
-                >
-                  <option value="" disabled>Open this select menu</option>
-                  <option
-                    v-for="category of categories"
-                    :key="`category-${category.param}`"
-                    :value="category.param"
-                  >
-                    {{ toTitle(category.title) }}
-                  </option>
-                </select>
-              </div>
+            <!-- Category. -->
+            <div v-if="categories" class="form-group">
+              <label :for="`business-${order}-category`">Category</label>
+              <input
+                :id="`business-${order}-category`"
+                v-model="businessForm.category"
+                type="text"
+                class="form-control"
+                placeholder="Select a category or add a new one"
+                :list="`business-${order}-categories`"
+                required
+              />
+              <datalist :id="`business-${order}-categories`">
+                <option
+                  v-for="category of categories"
+                  :key="`category-${category.param}`"
+                  :value="category.param"
+                ></option>
+              </datalist>
+            </div>
 
+            <div class="form-row">
               <!-- City. -->
-              <div class="form-group col">
+              <div class="form-group col-md-4">
                 <label :for="`business-${order}-city`"> City </label>
                 <input
                   :id="`business-${order}-city`"
@@ -87,19 +88,19 @@
                   required
                 />
               </div>
-            </div>
 
-            <!-- Website. -->
-            <div class="form-group">
-              <label :for="`business-${order}-website`"> Website </label>
-              <input
-                :id="`business-${order}-website`"
-                v-model="businessForm.website"
-                type="url"
-                class="form-control"
-                placeholder="https://example.com"
-                autocomplete="url"
-              />
+              <!-- Website. -->
+              <div class="form-group col">
+                <label :for="`business-${order}-website`"> Website </label>
+                <input
+                  :id="`business-${order}-website`"
+                  v-model="businessForm.website"
+                  type="url"
+                  class="form-control"
+                  placeholder="https://example.com"
+                  autocomplete="url"
+                />
+              </div>
             </div>
 
             <div class="form-group">
@@ -140,7 +141,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
-import { defineComponent, inject, Ref, ref } from 'vue';
+import { computed, defineComponent, inject, Ref, ref } from 'vue';
 import { IBusiness, IBusinessForm, ICategory } from '../../interfaces';
 import useBackend from '../composables/useBackend';
 import useFormatting from '../composables/useFormatting';
@@ -181,7 +182,7 @@ export default defineComponent({
     const isLoading: Ref<boolean> = ref(false);
 
     // Retrive the categories from the parent component.
-    const categories: undefined | ICategory[] = inject('categories');
+    const categories: undefined | Ref<ICategory[]> = inject('categories');
 
     // Populate the form values.
     const businessForm: Ref<IBusinessForm> = ref({
@@ -195,6 +196,14 @@ export default defineComponent({
         : '',
       notes: '',
     });
+
+    // Check if the 'other' category option was selected.
+    const isOther = computed(
+      () =>
+        !categories?.value
+          ?.map((category) => category.param)
+          .includes(businessForm.value.category)
+    );
 
     /**
      * When a user submits their input.
@@ -219,7 +228,15 @@ export default defineComponent({
       isLoading.value = false;
     };
 
-    return { text, isLoading, categories, businessForm, toTitle, onSubmit };
+    return {
+      text,
+      categories,
+      businessForm,
+      isLoading,
+      isOther,
+      toTitle,
+      onSubmit,
+    };
   },
 });
 </script>
