@@ -19,7 +19,11 @@
         />
 
         <!-- New business modal. -->
-        <BusinessAdd class="align-self-end mb-4" />
+        <BusinessForm
+          order="newBusiness"
+          action="store"
+          class="align-self-end mb-4"
+        />
 
         <!-- Businesses. -->
         <BusinessList :businesses="businesses" />
@@ -51,8 +55,8 @@ const BusinessFilter = defineAsyncComponent(
 const BusinessSearchbar = defineAsyncComponent(
   () => import('./js/components/BusinessSearchbar.vue')
 );
-const BusinessAdd = defineAsyncComponent(
-  () => import('./js/components/BusinessAdd.vue')
+const BusinessForm = defineAsyncComponent(
+  () => import('./js/components/BusinessForm.vue')
 );
 const BusinessList = defineAsyncComponent(
   () => import('./js/components/BusinessList.vue')
@@ -62,7 +66,7 @@ export default defineComponent({
   components: {
     BusinessFilter,
     BusinessSearchbar,
-    BusinessAdd,
+    BusinessForm,
     BusinessList,
   },
 

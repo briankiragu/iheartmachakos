@@ -71,9 +71,7 @@
           </p>
 
           <!-- Edit button. -->
-          <BusinessListItemEdit :business="business">
-            Suggest an edit
-          </BusinessListItemEdit>
+          <BusinessForm :order="business.directoryIdx" :business="business" />
         </div>
       </div>
     </div>
@@ -86,13 +84,11 @@ import { computed, defineAsyncComponent, defineComponent } from 'vue';
 import { IBusiness } from '../../interfaces';
 import useFormatting from '../composables/useFormatting';
 
-const BusinessListItemEdit = defineAsyncComponent(
-  () => import('./BusinessListItemEdit.vue')
-);
+const BusinessForm = defineAsyncComponent(() => import('./BusinessForm.vue'));
 
 export default defineComponent({
   name: 'BusinessListItem',
-  components: { BusinessListItemEdit },
+  components: { BusinessForm },
   props: {
     business: { type: Object as () => IBusiness, default: () => {} },
   },

@@ -2,30 +2,30 @@
   <!-- Button trigger modal -->
   <button
     type="button"
-    class="btn btn-primary"
+    class="business-list-item-edit__trigger btn btn-primary"
     data-toggle="modal"
-    data-target="#newBusinessBackdrop"
+    :data-target="`#business${order}Backdrop`"
     v-bind="$attrs"
   >
-    New Business
+    <slot>{{ text.trigger }}</slot>
   </button>
 
   <!-- Modal -->
   <teleport to="#business-modals">
     <div
-      id="newBusinessBackdrop"
+      :id="`business${order}Backdrop`"
       class="modal fade"
       data-backdrop="static"
       data-keyboard="false"
       tabindex="-1"
-      aria-labelledby="newBusinessBackdropLabel"
+      :aria-labelledby="`business${order}BackdropLabel`"
       aria-hidden="true"
     >
       <form class="modal-dialog" @submit.prevent="onSubmit">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 id="newBusinessBackdropLabel" class="modal-title">
-              Add a new business
+            <h5 :id="`business${order}BackdropLabel`" class="modal-title">
+              {{ text.title }}
             </h5>
             <button
               type="button"
@@ -41,9 +41,9 @@
           <div class="modal-body">
             <!-- Title. -->
             <div class="form-group">
-              <label :for="`new-business-title`">Title</label>
+              <label :for="`business-${order}-title`"> Title </label>
               <input
-                :id="`new-business-title`"
+                :id="`business-${order}-title`"
                 v-model="businessForm.title"
                 type="text"
                 class="form-control"
@@ -56,8 +56,9 @@
             <div class="form-row">
               <!-- Category. -->
               <div v-if="categories" class="form-group col-md-7">
-                <label for="new-business-category">Category</label>
+                <label :for="`business-${order}-category`"> Category </label>
                 <select
+                  :id="`business-${order}-category`"
                   v-model="businessForm.category"
                   class="custom-select"
                   required
@@ -75,13 +76,13 @@
 
               <!-- City. -->
               <div class="form-group col">
-                <label for="new-business-city">City</label>
+                <label :for="`business-${order}-city`"> City </label>
                 <input
-                  id="new-business-city"
+                  :id="`business-${order}-city`"
                   v-model="businessForm.city"
                   type="text"
                   class="form-control"
-                  placeholder="Where is this business?"
+                  placeholder="Where is this business"
                   autocomplete="address-level2"
                   required
                 />
@@ -90,9 +91,9 @@
 
             <!-- Website. -->
             <div class="form-group">
-              <label for="new-business-website">Website</label>
+              <label :for="`business-${order}-website`"> Website </label>
               <input
-                id="new-business-website"
+                :id="`business-${order}-website`"
                 v-model="businessForm.website"
                 type="url"
                 class="form-control"
@@ -102,9 +103,9 @@
             </div>
 
             <div class="form-group">
-              <label for="new-business-notes">Notes</label>
+              <label :for="`business-${order}-notes`"> Notes </label>
               <textarea
-                id="new-business-notes"
+                :id="`business-${order}-notes`"
                 v-model="businessForm.notes"
                 class="form-control"
                 rows="3"
@@ -126,7 +127,7 @@
               class="btn btn-primary"
               :class="{ disabled: isLoading }"
             >
-              Add new business
+              {{ text.submit }}
             </button>
           </div>
         </div>
@@ -136,56 +137,89 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable no-nested-ternary */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
 import { defineComponent, inject, Ref, ref } from 'vue';
-import { IBusinessForm, ICategory } from '../../interfaces';
+import { IBusiness, IBusinessForm, ICategory } from '../../interfaces';
 import useBackend from '../composables/useBackend';
 import useFormatting from '../composables/useFormatting';
 
 /* eslint-disable no-console */
 export default defineComponent({
-  name: 'BusinessAdd',
+  name: 'BusinessForm',
 
-  setup() {
+  props: {
+    order: { type: [String, Number], default: '' },
+    action: { type: String, default: 'update' },
+    business: {
+      type: Object as () => IBusiness,
+      default: () => {},
+      required: false,
+    },
+  },
+
+  setup(props) {
+    // Get backend properties.
+    const { storeBusiness, updateBusiness } = useBackend();
+
+    // Formatting methods.
+    const { toTitle } = useFormatting();
+
+    // Get the form text content.
+    const text: { [key: string]: string } = {
+      trigger: props.action === 'update' ? 'Suggest an edit' : 'New Business',
+      title:
+        props.action === 'update'
+          ? `Edit ${props.business.title}`
+          : 'Add a new business',
+      submit:
+        props.action === 'update' ? 'Edit this business' : 'Add this business',
+    };
+
     // Set the loading state.
     const isLoading: Ref<boolean> = ref(false);
 
     // Retrive the categories from the parent component.
     const categories: undefined | ICategory[] = inject('categories');
 
-    // Get backend properties.
-    const { storeBusiness } = useBackend();
-
-    // Formatting methods.
-    const { toTitle } = useFormatting();
-
     // Populate the form values.
     const businessForm: Ref<IBusinessForm> = ref({
-      title: '',
-      category: '',
-      city: '',
-      website: '',
+      title: props.business ? props.business.title : '',
+      category: props.business ? props.business.category.toLowerCase() : '',
+      city: props.business ? props.business.city : '',
+      website: props.business
+        ? props.business.website
+          ? props.business.website
+          : ''
+        : '',
       notes: '',
     });
 
     /**
      * When a user submits their input.
      */
-    const onSubmit = (): void => {
+    const onSubmit = async (): Promise<void> => {
       // Set the state to loading.
       isLoading.value = true;
 
       // Send the request.
-      storeBusiness(businessForm.value)
-        .then((res) => console.log(res))
-        .catch((err) => console.error(err))
-        .finally(() => {
-          isLoading.value = false;
-        });
+      const response =
+        props.action === 'update'
+          ? await updateBusiness(
+              props.business.directoryIdx,
+              businessForm.value
+            )
+          : await storeBusiness(businessForm.value);
+
+      // Log the response.
+      console.log(response);
+
+      // Remove the loading state.
+      isLoading.value = false;
     };
 
-    return { isLoading, categories, businessForm, toTitle, onSubmit };
+    return { text, isLoading, categories, businessForm, toTitle, onSubmit };
   },
 });
 </script>
