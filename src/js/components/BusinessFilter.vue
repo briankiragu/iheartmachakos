@@ -12,9 +12,9 @@
           "
           type="button"
           data-toggle="collapse"
-          data-target="#collapseOne"
+          data-target="#filterCollapse"
           :aria-expanded="isExpanded"
-          aria-controls="collapseOne"
+          aria-controls="filterCollapse"
         >
           <div class="business-filter__title">
             <h2 class="business-filter__heading mb-1">Filter by category</h2>
@@ -30,21 +30,27 @@
       </div>
 
       <div
-        id="collapseOne"
+        id="filterCollapse"
         class="collapse"
         :class="{ show: isExpanded }"
         aria-labelledby="categoryHeading"
         data-parent="#categoryAccordion"
       >
-        <div class="card-body d-flex flex-wrap">
-          <BusinessFilterItem
-            v-for="item of items"
-            :key="item.param"
-            :item="item"
-            class="mb-2 mr-2"
-            :active="filters.includes(item.param)"
-            @selected="updateFilters"
-          />
+        <div class="card-body">
+          <div v-if="hasItems" class="business-filter__items d-flex flex-wrap">
+            <BusinessFilterItem
+              v-for="item of items"
+              :key="item.param"
+              :item="item"
+              class="mb-2 mr-2"
+              :active="filters.includes(item.param)"
+              @selected="updateFilters"
+            />
+          </div>
+
+          <p v-else class="mb-0 text-center">
+            There are no categories to show.
+          </p>
         </div>
       </div>
     </div>
@@ -84,6 +90,9 @@ export default defineComponent({
     // Applied filters.
     const filters: Ref<string[]> = ref([]);
 
+    // Check if there are any filter items.
+    const hasItems = computed(() => props.items.length > 0);
+
     // When a filter item is selected.
     const updateFilters = (value: string) => {
       // Check if the item is in the filters already.
@@ -106,7 +115,7 @@ export default defineComponent({
       filters.value = props.modelValue.split(',').filter((val) => val);
     });
 
-    return { filters, filterCount, isExpanded, updateFilters };
+    return { filters, hasItems, filterCount, isExpanded, updateFilters };
   },
 });
 </script>

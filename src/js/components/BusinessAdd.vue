@@ -2,7 +2,7 @@
   <!-- Button trigger modal -->
   <button
     type="button"
-    class="btn btn-block btn-primary"
+    class="btn btn-primary"
     data-toggle="modal"
     data-target="#newBusinessBackdrop"
     v-bind="$attrs"

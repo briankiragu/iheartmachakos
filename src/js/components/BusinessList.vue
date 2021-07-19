@@ -1,18 +1,22 @@
 <template>
   <div class="business-list mb-5">
-    <div class="business-list__card">
+    <div v-if="hasBusinesses" class="business-list__cards">
       <BusinessListItem
         v-for="business in businesses"
         :key="business.directoryIdx"
         :business="business"
       />
     </div>
+
+    <div v-else class="card">
+      <div class="card-body text-center">There are no businesses to display.</div>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 /* eslint-disable import/extensions */
-import { defineAsyncComponent, defineComponent } from 'vue';
+import { computed, defineAsyncComponent, defineComponent } from 'vue';
 import { IBusiness } from '../../interfaces';
 
 // Import components.
@@ -27,8 +31,9 @@ export default defineComponent({
     businesses: { type: Array as () => IBusiness[], default: () => [] },
   },
 
-  setup() {
-    return {};
+  setup(props) {
+    const hasBusinesses = computed(() => props.businesses.length > 0);
+    return { hasBusinesses };
   },
 });
 </script>

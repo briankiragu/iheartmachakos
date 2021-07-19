@@ -25,6 +25,8 @@ const getFormData =
 export default function useBackend() {
   const searchTerm: Ref<string> = ref('');
   const filterTerm: Ref<string> = ref('');
+  // const categories: Ref<ICategory[]> = ref([]);
+  // const businesses: Ref<IBusiness[]> = ref([]);
   const categories: Ref<ICategory[]> = ref([
     {
       "param": "beauty",
@@ -77,6 +79,7 @@ export default function useBackend() {
     }
   ]);
 
+
   const hasCategories: Ref<boolean> = computed(() => categories.value.length > 0)
   const hasBusinesses: Ref<boolean> = computed(() => businesses.value.length > 0)
 
@@ -84,19 +87,26 @@ export default function useBackend() {
    * Function to query endpoint.
    *
    * @param page {number} The page number.
-   * @param term {null | string} The search term
+   * @param filter {null | string} The filter term
+   * @param Search {null | string} The Search term
    * @returns Promise<IBusiness[]>
    * @author Brian K. Kiragu <bkariuki@hotmail.com>
    */
   const getBusinesses = async (
     page: number = 1,
-    term: null | string = null
+    filter: null | string = null,
+    search: null | string = null
   ): Promise<IPaginatedBusinessResponse> => {
     // Set the request endpoint.
     let endpoint = `${baseUrl}/TableSearchJson?config=directoryMachakosJson&page=${page}`;
 
+    // Check if a filter term was provided.
+    endpoint = filter ? `${endpoint}&categories=${filter}` : endpoint;
+
     // Check if a search term was provided.
-    endpoint = term ? `${endpoint}&search=${term}` : endpoint;
+    endpoint = search
+      ? `${endpoint}&${new URLSearchParams({ search }).toString()}`
+      : endpoint;
 
     // Launch the request.
     const response = await fetch(endpoint);

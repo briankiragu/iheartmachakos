@@ -23,6 +23,7 @@
 </template>
 
 <script lang="ts">
+import { debounce } from 'lodash';
 import { defineComponent } from 'vue';
 
 export default defineComponent({
@@ -34,9 +35,9 @@ export default defineComponent({
   emits: ['update:modelValue'],
 
   setup(props, { emit }) {
-    const onSearch = (e: any) => {
+    const onSearch = debounce((e: any) => {
       emit('update:modelValue', e.target.value);
-    };
+    }, 2000);
 
     return { onSearch };
   },

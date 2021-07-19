@@ -18,17 +18,11 @@
           class="mb-5 mb-md-4"
         />
 
-        <div class="align-self-end mb-4">
-          <BusinessAdd />
-        </div>
+        <!-- New business modal. -->
+        <BusinessAdd class="align-self-end mb-4" />
 
-        <div v-if="hasBusinesses">
-          <BusinessList :businesses="businesses" />
-        </div>
-
-        <div v-else class="text-center">
-          <p class="text-muted">No businesses to display</p>
-        </div>
+        <!-- Businesses. -->
+        <BusinessList :businesses="businesses" />
       </div>
     </div>
 
@@ -47,6 +41,7 @@ import {
   provide,
   ref,
   Ref,
+  watch,
 } from 'vue';
 import useBackend from './js/composables/useBackend';
 
@@ -78,7 +73,6 @@ export default defineComponent({
       filterTerm,
       businesses,
       categories,
-      hasBusinesses,
       getBusinesses,
       getCategories,
     } = useBackend();
@@ -93,7 +87,9 @@ export default defineComponent({
       isLoading.value = true;
 
       // Get the current query parameters.
-      const urlSearchParams = new URLSearchParams(window.location.search);
+      const urlSearchParams: URLSearchParams = new URLSearchParams(
+        window.location.search
+      );
       const { search, category } = Object.fromEntries(
         urlSearchParams.entries()
       );
@@ -103,7 +99,7 @@ export default defineComponent({
       searchTerm.value = search;
 
       // Get the first businesses on page load.
-      getBusinesses(pageNo.value, searchTerm.value)
+      getBusinesses(pageNo.value, filterTerm.value, searchTerm.value)
         .then((response) => {
           businesses.value = [...response.data];
         })
@@ -129,8 +125,8 @@ export default defineComponent({
           // Add the page count.
           pageNo.value += 1;
 
-          // Get the requests as per the search term.
-          getBusinesses(pageNo.value, searchTerm.value)
+          // Get the requests as per the filter and search term.
+          getBusinesses(pageNo.value, filterTerm.value, searchTerm.value)
             .then((response) => {
               // Check if any new data was returned.
               if (response.data.length > 0) {
@@ -155,20 +151,30 @@ export default defineComponent({
       isLoading.value = false;
     });
 
-    // Update the filter query.
-    const updateFilterQuery = (filters: Ref<string[]>) => {
-      console.dir(filters.value);
-    };
+    // Setup a watcher for the filter and search terms.
+    watch([filterTerm, searchTerm], (val) => {
+      // Set the state to loading.
+      isLoading.value = true;
+
+      // Update the businesses.
+      getBusinesses(pageNo.value, val[0], val[1])
+        .then((response) => {
+          businesses.value = [...response.data];
+        })
+        .catch((err) => console.error(err.message))
+        .finally(() => {
+          // Remove the loading state.
+          isLoading.value = false;
+        });
+    });
 
     // When a user submits a form.
     const onSubmit = () => {
-      console.log(`Submitting the form`);
-
       // Reset the page counter.
       pageNo.value = 1;
 
-      // Submit the request with the new search term(s).
-      getBusinesses(pageNo.value, searchTerm.value)
+      // Submit the request with the new filter and search term(s).
+      getBusinesses(pageNo.value, filterTerm.value, searchTerm.value)
         .then((response) => {
           businesses.value = [...response.data];
         })
@@ -184,8 +190,6 @@ export default defineComponent({
       filterTerm,
       categories,
       businesses,
-      hasBusinesses,
-      updateFilterQuery,
       onSubmit,
     };
   },
