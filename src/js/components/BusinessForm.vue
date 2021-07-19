@@ -138,6 +138,7 @@
 </template>
 
 <script lang="ts">
+/* eslint-disable no-restricted-globals */
 /* eslint-disable no-nested-ternary */
 /* eslint-disable import/no-unresolved */
 /* eslint-disable import/extensions */
@@ -213,7 +214,7 @@ export default defineComponent({
       isLoading.value = true;
 
       // Send the request.
-      const response =
+      const response: any =
         props.action === 'update'
           ? await updateBusiness(
               props.business.directoryIdx,
@@ -221,8 +222,10 @@ export default defineComponent({
             )
           : await storeBusiness(businessForm.value);
 
-      // Log the response.
-      console.log(response);
+      // Refresh the page if it was successful.
+      if (response.status === 'success') {
+        location.reload();
+      }
 
       // Remove the loading state.
       isLoading.value = false;

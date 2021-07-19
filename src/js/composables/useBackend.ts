@@ -25,60 +25,8 @@ const getFormData =
 export default function useBackend() {
   const searchTerm: Ref<string> = ref('');
   const filterTerm: Ref<string> = ref('');
-  // const categories: Ref<ICategory[]> = ref([]);
-  // const businesses: Ref<IBusiness[]> = ref([]);
-  const categories: Ref<ICategory[]> = ref([
-    {
-      "param": "beauty",
-      "title": "Beauty and Health",
-      "status": "Active"
-    },
-    {
-      "param": "bookstores",
-      "title": "Book Stores",
-      "status": "Active"
-    },
-    {
-      "param": "clothing",
-      "title": "Clothing Store",
-      "status": "Active"
-    }
-  ]);
-  const businesses: Ref<IBusiness[]> = ref([
-    {
-      "directoryIdx": 4,
-      "category": "Beauty",
-      "title": "Ruth Beauty Parlour",
-      "city": "Machakos",
-      "owner": "Bernard",
-      "website": ""
-    },
-    {
-      "directoryIdx": 1,
-      "category": "bookstores",
-      "title": "Chap Chap Enterprise",
-      "city": "Machakos",
-      "owner": "Richard Wasike",
-      "website": null
-    },
-    {
-      "directoryIdx": 3,
-      "category": "bookstores",
-      "title": "Helima",
-      "city": "Machakos",
-      "owner": "",
-      "website": ""
-    },
-    {
-      "directoryIdx": 2,
-      "category": "bookstores",
-      "title": "Nehama Bookshop",
-      "city": "Machakos",
-      "owner": "",
-      "website": ""
-    }
-  ]);
-
+  const categories: Ref<ICategory[]> = ref([]);
+  const businesses: Ref<IBusiness[]> = ref([]);
 
   const hasCategories: Ref<boolean> = computed(() => categories.value.length > 0)
   const hasBusinesses: Ref<boolean> = computed(() => businesses.value.length > 0)
