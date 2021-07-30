@@ -17,13 +17,23 @@
       >
         <div class="business-list-item__title">
           <h2 class="business-list-item__heading mb-2 mb-md-1">
-            {{ toTitle(business.title) }}
+            <span>{{ toTitle(business.title) }}</span>
+            <a
+              v-if="hasWebsite"
+              title="Visit Website"
+              class="business-list-item__link ml-2"
+              :href="`${business.website}`"
+              target="_blank"
+            >
+              <i class="fas fa-external-link-alt"></i>
+            </a>
           </h2>
+          <h5 v-if="hasOwner" class="business-list-item__locally-owned">
+            <i class="fas fa-star"></i> Local
+          </h5>
           <h4
             class="business-list-item__subheading mb-0 d-flex align-items-start"
           >
-            <!-- <i class="fas fa-store"></i> -->
-            <i v-if="hasOwner" class="fas fa-user-check"></i>
             {{ toTitle(business.category) }} in
             <em class="ml-1">{{ toTitle(business.city) }}</em>
           </h4>
@@ -99,8 +109,8 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-$primary-color: #494545;
-$accent-color: #184f97;
+$primary-color: hsl(0, 3%, 28%);
+$accent-color: hsl(214, 70%, 41%);
 
 .business-list-item {
   margin-bottom: 15px;
@@ -116,7 +126,7 @@ $accent-color: #184f97;
   }
 
   &__subheading {
-    color: rgba($primary-color, 1);
+    color: $primary-color;
     font-size: 0.94rem;
     font-weight: 400;
 
@@ -125,8 +135,14 @@ $accent-color: #184f97;
     }
   }
 
+  &__locally-owned {
+    color: hsl(17, 4%, 37%);
+    font-size: 0.94rem;
+  }
+
   &__link {
     color: $accent-color;
+    font-size: 0.9rem;
   }
 }
 </style>
