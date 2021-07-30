@@ -37,7 +37,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const onSearch = debounce((e: any) => {
       emit('update:modelValue', e.target.value);
-    }, 2000);
+    }, 275);
 
     return { onSearch };
   },

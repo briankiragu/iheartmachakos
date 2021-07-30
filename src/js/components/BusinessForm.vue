@@ -103,6 +103,7 @@
               </div>
             </div>
 
+            <!-- Notes. -->
             <div class="form-group">
               <label :for="`business-${order}-notes`"> Notes </label>
               <textarea
