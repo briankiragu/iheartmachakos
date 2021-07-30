@@ -3,14 +3,14 @@
     <!-- Modals. -->
     <div id="business-modals"></div>
 
-    <div class="row">
-      <div class="col-md-4 pb-4 px-4 pt-4 p-md-4">
+    <div class="row py-5">
+      <div v-if="!hasDirectoryCategory" class="col-md-4 pb-4 px-4 px-md-5 py-0">
         <!-- Categories. -->
         <BusinessFilter v-model="filterTerm" :items="categories" />
       </div>
 
       <!-- Result. -->
-      <div class="businesses col px-4 py-0 py-md-4 d-flex flex-column">
+      <div class="businesses col px-4 py-0 d-flex flex-column">
         <!-- Searchbar. -->
         <BusinessSearchbar
           v-model="searchTerm"
@@ -81,6 +81,9 @@ export default defineComponent({
       getCategories,
     } = useBackend();
 
+    // Check if the directory category has been set.
+    const hasDirectoryCategory: boolean = directoryCategory !== '';
+
     // Declare data properties.
     const isLoading: Ref<boolean> = ref(true);
     const pageNo: Ref<number> = ref(1);
@@ -98,9 +101,11 @@ export default defineComponent({
         urlSearchParams.entries()
       );
 
-      // Set the filter and search terms.
-      filterTerm.value = category;
+      // Set the search term depending on the search URL params.
       searchTerm.value = search;
+
+      // Set the category filter depending on the Directory Category or search URL params.
+      filterTerm.value = hasDirectoryCategory ? directoryCategory : category;
 
       // Get the first businesses on page load.
       getBusinesses(pageNo.value, filterTerm.value, searchTerm.value)
@@ -189,6 +194,7 @@ export default defineComponent({
     provide('categories', categories);
 
     return {
+      hasDirectoryCategory,
       isLoading,
       searchTerm,
       filterTerm,
