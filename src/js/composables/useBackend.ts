@@ -191,7 +191,11 @@ export default function useBackend() {
     // Launch the request.
     const response = await fetch(endpoint, {
       method: 'POST',
-      body: getFormData(data, 'BusinessDirectory')
+      body: getFormData(
+        // Add the 'library' from the global variables.
+        { library, ...data },
+        'BusinessDirectory'
+      )
     });
 
     // Check for errors.
