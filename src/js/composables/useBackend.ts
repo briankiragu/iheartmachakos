@@ -142,6 +142,36 @@ export default function useBackend() {
   }
 
   /**
+  * Function to query categories.
+  *
+  * @param page {number} The page number.
+  * @param term {null | string} The search term
+  * @returns Promise</ICategory[]>
+  * @author Brian K. Kiragu <bkariuki@hotmail.com>
+  */
+  const getCategories = async (
+    page: number = 1,
+    term: null | string = null
+  ): Promise<IPaginatedCategoryResponse> => {
+    // Set the request endpoint.
+    let endpoint = `${baseUrl}/TableSearchJson?config=businessCategories&page=${page}`;
+
+    // Check if a search term was provided.
+    endpoint = term ? `${endpoint}&search=${term}` : endpoint;
+
+    // Launch the request.
+    const response = await fetch(endpoint);
+
+    // Check for errors.
+    if (!response.ok) {
+      throw new Error(`There was an error ${response.statusText}`);
+    }
+
+    // Get the data from the request.
+    return response.json();
+  }
+
+  /**
    * Update a business
    *
    * @param data {IBusinessForm} User input data
@@ -197,38 +227,9 @@ export default function useBackend() {
       method: 'POST',
       body: getFormData(
         { ...data, ...{ directoryIdx } },
-        'BusinessDirectory')
+        'BusinessDirectory'
+      )
     });
-
-    // Check for errors.
-    if (!response.ok) {
-      throw new Error(`There was an error ${response.statusText}`);
-    }
-
-    // Get the data from the request.
-    return response.json();
-  }
-
-  /**
-  * Function to query categories.
-  *
-  * @param page {number} The page number.
-  * @param term {null | string} The search term
-  * @returns Promise</ICategory[]>
-  * @author Brian K. Kiragu <bkariuki@hotmail.com>
-  */
-  const getCategories = async (
-    page: number = 1,
-    term: null | string = null
-  ): Promise<IPaginatedCategoryResponse> => {
-    // Set the request endpoint.
-    let endpoint = `${baseUrl}/TableSearchJson?config=businessCategories&page=${page}`;
-
-    // Check if a search term was provided.
-    endpoint = term ? `${endpoint}&search=${term}` : endpoint;
-
-    // Launch the request.
-    const response = await fetch(endpoint);
 
     // Check for errors.
     if (!response.ok) {
