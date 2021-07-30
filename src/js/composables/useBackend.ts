@@ -25,8 +25,81 @@ const getFormData =
 export default function useBackend() {
   const searchTerm: Ref<string> = ref('');
   const filterTerm: Ref<string> = ref('');
-  const categories: Ref<ICategory[]> = ref([]);
-  const businesses: Ref<IBusiness[]> = ref([]);
+  // const categories: Ref<ICategory[]> = ref([]);
+  // const businesses: Ref<IBusiness[]> = ref([]);
+  const categories: Ref<ICategory[]> = ref([
+    {
+      "param": "automotive",
+      "title": "Automotive",
+      "status": "Active"
+    },
+    {
+      "param": "beauty",
+      "title": "Beauty and Health",
+      "status": "Active"
+    },
+    {
+      "param": "bookstores",
+      "title": "Book Stores",
+      "status": "Active"
+    },
+    {
+      "param": "clothing",
+      "title": "Clothing Store",
+      "status": "Active"
+    },
+    {
+      "param": "electronics",
+      "title": "Electronics",
+      "status": "Active"
+    },
+    {
+      "param": "general",
+      "title": "General Store",
+      "status": "Active"
+    },
+    {
+      "param": "hotels",
+      "title": "Hotels",
+      "status": "Active"
+    },
+    {
+      "param": "restaurants",
+      "title": "Restaurants",
+      "status": "Active"
+    },
+    {
+      "param": "shoes",
+      "title": "Shoes",
+      "status": "Active"
+    }
+  ]);
+  const businesses: Ref<IBusiness[]> = ref([
+    {
+      "directoryIdx": 4,
+      "category": "Beauty",
+      "title": "Ruth Beauty Parlour",
+      "city": "Machakos",
+      "owner": "Bernard",
+      "website": "https://heartofkenya.com/machakos/ruth_beauty_parlour"
+    },
+    {
+      "directoryIdx": 1,
+      "category": "bookstores",
+      "title": "Chap Chap Enterprise",
+      "city": "Machakos",
+      "owner": "Richard Wasike",
+      "website": "https://heartofkenya.com/machakos/chapchap"
+    },
+    {
+      "directoryIdx": 6,
+      "category": "general",
+      "title": "Remnant General Shop",
+      "city": "Machakos",
+      "owner": "John Musembi",
+      "website": "https://heartofkenya.com/machakos/remnant"
+    }
+  ]);
 
   const hasCategories: Ref<boolean> = computed(() => categories.value.length > 0)
   const hasBusinesses: Ref<boolean> = computed(() => businesses.value.length > 0)

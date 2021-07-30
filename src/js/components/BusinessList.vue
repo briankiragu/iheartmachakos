@@ -1,6 +1,10 @@
 <template>
   <div class="business-list mb-5">
-    <div v-if="hasBusinesses" class="business-list__cards">
+    <div
+      v-if="hasBusinesses"
+      :id="`business-directory-accordion`"
+      class="business-list__cards accordion"
+    >
       <BusinessListItem
         v-for="business in businesses"
         :key="business.directoryIdx"
@@ -9,7 +13,9 @@
     </div>
 
     <div v-else class="card">
-      <div class="card-body text-center">There are no businesses to display.</div>
+      <div class="card-body text-center">
+        There are no businesses to display.
+      </div>
     </div>
   </div>
 </template>
