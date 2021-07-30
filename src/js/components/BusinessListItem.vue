@@ -28,7 +28,7 @@
               <i class="fas fa-external-link-alt"></i>
             </a>
           </h2>
-          <h5 v-if="hasOwner" class="business-list-item__locally-owned">
+          <h5 v-if="hasOwner" class="business-list-item__locally-owned my-1">
             <i class="fas fa-star"></i> Local
           </h5>
           <h4
