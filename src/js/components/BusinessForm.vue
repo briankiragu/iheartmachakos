@@ -171,7 +171,7 @@ export default defineComponent({
 
     // Get the form text content.
     const text: { [key: string]: string } = {
-      trigger: props.action === 'update' ? 'Suggest an edit' : 'New Business',
+      trigger: props.action === 'update' ? 'Suggest an edit' : 'Add a Business',
       title:
         props.action === 'update'
           ? `Edit ${props.business.title}`
